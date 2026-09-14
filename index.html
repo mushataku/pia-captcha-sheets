@@ -102,13 +102,37 @@
     position:fixed; left:0; right:0; bottom:0; z-index:30;
     background:color-mix(in srgb, var(--paper) 94%, transparent); backdrop-filter:blur(8px);
     border-top:1px solid var(--line); padding:10px 16px; display:flex; gap:10px; justify-content:center;
-    flex-wrap:wrap;
+    flex-wrap:wrap; align-items:center;
   }
-  .sendbar button{
+  .sendbar button.send{
     font:600 13px/1 sans-serif; padding:10px 18px; border-radius:9px; border:1px solid var(--accent);
     background:var(--accent); color:#fff; cursor:pointer;
   }
-  .sendbar button:disabled{opacity:.4; cursor:default}
+  .sendbar button.send:disabled{opacity:.4; cursor:default}
+  .sendbar button.resendall{
+    font:500 11.5px/1.2 sans-serif; padding:8px 12px; border-radius:9px; border:1px dashed var(--warn);
+    background:var(--warn-soft); color:var(--warn); cursor:pointer;
+  }
+  .sendbar input.name{
+    font:500 13px/1 sans-serif; padding:9px 10px; border-radius:9px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink); width:9em;
+  }
+  .sendbar .status{font-size:12.5px; color:var(--done); font-weight:600; flex-basis:100%; text-align:center}
+  .sendbar .status[hidden]{display:none}
+  .fallback{
+    flex-basis:100%; background:var(--warn-soft); border:1px solid var(--warn); border-radius:9px;
+    padding:10px; display:flex; flex-direction:column; gap:6px;
+  }
+  .fallback[hidden]{display:none}
+  .fallback p{margin:0; font-size:12.5px; color:var(--warn); font-weight:600}
+  .fallback textarea{
+    width:100%; height:6em; font:12px/1.4 ui-monospace,monospace; border:1px solid var(--line);
+    border-radius:7px; padding:6px; background:var(--surface); color:var(--ink);
+  }
+  .fallback button{
+    align-self:flex-start; font:600 12px/1 sans-serif; padding:8px 12px; border-radius:7px;
+    border:1px solid var(--warn); background:var(--surface); color:var(--warn); cursor:pointer;
+  }
   .empty{color:var(--ink-3); font-size:13px; margin-top:30px; text-align:center}
 </style>
 </head>
@@ -135,11 +159,16 @@
 (function(){
   "use strict";
   var SHEETS_REPO = "mushataku/pia-captcha-sheets";
+  // 回答の送信先＝受け口（Cloud Run `pia-answers-inbox`・GitHub ログイン不要・
+  // `measure/box_ingest.py` の ANSWERS_INBOX_URL と同じ値をテストで固定）
+  var ANSWERS_INBOX_URL = "https://pia-answers-inbox-vlu26jpgea-an.a.run.app/";
   var POLL_MS = 60000;
-  var ISSUE_BODY_MAX_LEN = 7000;
-  var ISSUE_CHUNK_SIZE = 100;
+  var INBOX_BODY_MAX_LEN = 30000;
+  var INBOX_CHUNK_SIZE = 1500;
+  var NAME_MAX_LEN = 40;
   var LS = "pia-queue-page-v1";
   var LS_MODE = "pia-queue-page-mode-v1";
+  var LS_NAME = "pia-queue-page-name-v1";  // 任意の名前欄（state とは別キー＝state の形を変えない）
   var SORT_MODES = {conf_asc: 1, conf_desc: 1, box: 1};
 
   var main = document.getElementById("queue");
@@ -214,7 +243,7 @@
     var resend = document.createElement("button");
     resend.type = "button"; resend.className = "resend"; resend.hidden = true;
     resend.textContent = "送信済み（反映待ち）・もう一度送る";
-    resend.title = "GitHubのタブを閉じてしまった等で届いていない場合、押すと送信対象に戻る";
+    resend.title = "届いていないと思う場合、押すと送信対象に戻る";
     resend.addEventListener("click", function(){
       delete st(it.sha8).sent;
       resend.hidden = true;
@@ -485,18 +514,32 @@
   loadQueue();
   setInterval(loadQueue, POLL_MS);
 
-  // ---------- 回答を送る ----------
+  // ---------- 回答を送る（受け口へ fetch POST・200 と ok を受けて初めて sent にする） ----------
+  // 2026-09-14 pia-answers-no-login-inbox: 旧版は GitHub の Issue 作成画面を開いた直後に sent を
+  // 固定していた（届いたかを見ていない＋GitHub ログインが要る＝GitHub を持たない友達の回答が
+  // 1件も届かなかった）。受け口（Cloud Run・認証なし）に text/plain で POST し、返答の ok を
+  // 受けてから sent にする。失敗したら本文を画面に出して LINE で送れる退避を用意する。
+  function readName(){
+    var v = "";
+    try { v = localStorage.getItem(LS_NAME) || ""; } catch (e) {}
+    return v.replace(/[\r\n\t]/g, " ").trim().slice(0, NAME_MAX_LEN);
+  }
+  function saveName(v){
+    try { localStorage.setItem(LS_NAME, v.replace(/[\r\n\t]/g, " ").trim().slice(0, NAME_MAX_LEN)); } catch (e) {}
+  }
   function buildBody(pairs){
     var lines = ["queue"];
+    var name = readName();
+    if (name) lines.push("name: " + name);
     pairs.forEach(function(p){ lines.push(p[0] + " " + p[1]); });
     return lines.join("\n");
   }
   function splitBodies(pairs){
     if (!pairs.length) return [];
     var full = buildBody(pairs);
-    if (full.length <= ISSUE_BODY_MAX_LEN || pairs.length <= ISSUE_CHUNK_SIZE) return [pairs];
+    if (full.length <= INBOX_BODY_MAX_LEN || pairs.length <= INBOX_CHUNK_SIZE) return [pairs];
     var chunks = [];
-    for (var i = 0; i < pairs.length; i += ISSUE_CHUNK_SIZE) chunks.push(pairs.slice(i, i + ISSUE_CHUNK_SIZE));
+    for (var i = 0; i < pairs.length; i += INBOX_CHUNK_SIZE) chunks.push(pairs.slice(i, i + INBOX_CHUNK_SIZE));
     return chunks;
   }
   function collectPending(){
@@ -507,40 +550,148 @@
     });
     return pairs;
   }
+  function countSentWaiting(){
+    var n = 0;
+    Object.keys(state).forEach(function(sha8){
+      var s = state[sha8];
+      if (s.sent && !s.gone) n++;
+    });
+    return n;
+  }
+  function markSent(chunk){
+    chunk.forEach(function(p){
+      var sha8 = p[0];
+      st(sha8).sent = true;
+      var cell = cells[sha8];
+      var resendBtn = cell && cell.querySelector(".resend");
+      if (resendBtn) resendBtn.hidden = false;
+    });
+    persist();
+  }
+  function unsendAll(){
+    // 「送信済み（反映待ち）をまとめて送り直す」＝GitHub 時代に届かなかった友達の回答を救う入口。
+    // sent かつ gone でない項目の sent を外して送信対象に戻す（state の形は変えない）。
+    Object.keys(state).forEach(function(sha8){
+      var s = state[sha8];
+      if (!(s.sent && !s.gone)) return;
+      delete s.sent;
+      var cell = cells[sha8];
+      var resendBtn = cell && cell.querySelector(".resend");
+      if (resendBtn) resendBtn.hidden = true;
+    });
+    persist(); tally();
+  }
+  function postBody(body){
+    return fetch(ANSWERS_INBOX_URL, {
+      method: "POST",
+      headers: {"Content-Type": "text/plain;charset=UTF-8"},  // simple request＝CORS 事前確認なし
+      body: body
+    }).then(function(r){
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    }).then(function(j){
+      if (!j || j.ok !== true) throw new Error("bad response");
+      return j;
+    });
+  }
+
+  var sending = false;
+  var lastStatus = "";      // 「届きました（N件）」等・次の renderSendbar で表示
+  var failedBodies = [];    // 送れなかった本文（退避パネルに出す）
+
+  function sendAll(){
+    if (sending) return;
+    var pairs = collectPending();
+    if (!pairs.length) return;
+    var chunks = splitBodies(pairs);
+    sending = true; lastStatus = "送信中…"; failedBodies = [];
+    renderSendbar();
+    var delivered = 0;
+    var i = 0;
+    function next(){
+      if (i >= chunks.length) {
+        sending = false;
+        lastStatus = delivered ? "届きました（" + delivered + "件）" : "";
+        if (failedBodies.length) lastStatus = (delivered ? lastStatus + "・" : "") + "送れなかった分があります";
+        tally();
+        return;
+      }
+      var chunk = chunks[i++];
+      var body = buildBody(chunk);
+      postBody(body).then(function(){
+        markSent(chunk); delivered += chunk.length; next();
+      }).catch(function(){
+        failedBodies.push(body); next();
+      });
+    }
+    next();
+  }
+
+  function copyText(text, btn){
+    var done = function(){ btn.textContent = "コピーしました"; setTimeout(function(){ btn.textContent = "コピー"; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function(){ legacyCopy(text); done(); });
+    } else { legacyCopy(text); done(); }
+  }
+  function legacyCopy(text){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  // 名前欄は1回だけ作って使い回す（tally() のたびに作り直すと 60 秒ごとの reconcile で入力中の
+  // フォーカスが外れる）。送信ボタン等は ctl 側だけを作り直す。
+  var nameInp = document.createElement("input");
+  nameInp.className = "name"; nameInp.type = "text"; nameInp.placeholder = "名前（任意）";
+  nameInp.maxLength = NAME_MAX_LEN; nameInp.value = readName(); nameInp.autocomplete = "off";
+  nameInp.addEventListener("input", function(){ saveName(nameInp.value); });
+  sendbar.appendChild(nameInp);
+  var sendCtl = document.createElement("span");
+  sendCtl.style.display = "contents";
+  sendbar.appendChild(sendCtl);
+
   function renderSendbar(){
+    var sendbar = sendCtl;  // 以下はこの中だけを作り直す
     sendbar.innerHTML = "";
     var pairs = collectPending();
-    if (!pairs.length) {
-      var b = document.createElement("button");
-      b.type = "button"; b.textContent = "回答を送る（0件）"; b.disabled = true;
-      sendbar.appendChild(b);
-      return;
+    var waiting = countSentWaiting();
+
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "send";
+    b.textContent = sending ? "送信中…" : "回答を送る（" + pairs.length + "件）";
+    b.disabled = sending || !pairs.length;
+    b.addEventListener("click", sendAll);
+    sendbar.appendChild(b);
+
+    if (waiting && !sending) {
+      var r = document.createElement("button");
+      r.type = "button"; r.className = "resendall";
+      r.textContent = "送信済み（反映待ち）をまとめて送り直す（" + waiting + "件）";
+      r.title = "届いていない回答を送信対象に戻す。押した後に「回答を送る」を押す";
+      r.addEventListener("click", unsendAll);
+      sendbar.appendChild(r);
     }
-    var chunks = splitBodies(pairs);
-    chunks.forEach(function(chunk, idx){
-      var b = document.createElement("button");
-      b.type = "button";
-      b.textContent = chunks.length > 1
-        ? "回答を送る " + (idx+1) + "/" + chunks.length + "（" + chunk.length + "件）"
-        : "回答を送る（" + chunk.length + "件）";
-      b.addEventListener("click", function(){
-        var body = buildBody(chunk);
-        var url = "https://github.com/" + SHEETS_REPO + "/issues/new"
-          + "?title=" + encodeURIComponent("answers:queue")
-          + "&labels=answers&body=" + encodeURIComponent(body);
-        window.open(url, "_blank");
-        chunk.forEach(function(p){
-          var sha8 = p[0];
-          st(sha8).sent = true;
-          var cell = cells[sha8];
-          var resendBtn = cell && cell.querySelector(".resend");
-          if (resendBtn) resendBtn.hidden = false;
-        });
-        persist();
-        renderSendbar();
-      });
-      sendbar.appendChild(b);
-    });
+
+    var status = document.createElement("div");
+    status.className = "status"; status.id = "sendStatus";
+    status.textContent = lastStatus; status.hidden = !lastStatus;
+    sendbar.appendChild(status);
+
+    var fb = document.createElement("div");
+    fb.className = "fallback"; fb.id = "sendFallback"; fb.hidden = !failedBodies.length;
+    if (failedBodies.length) {
+      var p = document.createElement("p");
+      p.textContent = "送れませんでした。下の本文をコピーして、このまま LINE で拓也に送ってね";
+      var ta = document.createElement("textarea");
+      ta.readOnly = true; ta.value = failedBodies.join("\n\n");
+      var cp = document.createElement("button");
+      cp.type = "button"; cp.textContent = "コピー";
+      cp.addEventListener("click", function(){ copyText(ta.value, cp); });
+      fb.appendChild(p); fb.appendChild(ta); fb.appendChild(cp);
+    }
+    sendbar.appendChild(fb);
   }
 
   renderSendbar();
