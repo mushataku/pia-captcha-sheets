@@ -79,6 +79,12 @@
     color:var(--warn); cursor:pointer;
   }
   button.resend[hidden]{display:none}
+  /* 送信済み（resend が見えている）セルは画像・ヒント・入力を畳んで1行にする（流し続ける使い方で上に溜まらないように） */
+  .cell:has(button.resend:not([hidden])){opacity:.55; padding:6px 10px}
+  .cell:has(button.resend:not([hidden])) .shot,
+  .cell:has(button.resend:not([hidden])) .hint,
+  .cell:has(button.resend:not([hidden])) input,
+  .cell:has(button.resend:not([hidden])) button.skip{display:none}
 
   .sendbar{
     position:fixed; left:0; right:0; bottom:0; z-index:30;
