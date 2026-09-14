@@ -28,6 +28,17 @@
   header a.boxeslink{margin-left:auto; font-size:12px; color:var(--ink-3); text-decoration:none}
   header a.boxeslink:hover{color:var(--accent)}
 
+  .sortbar{display:flex; gap:6px; align-items:baseline; flex-basis:100%; order:10}
+  .sortbar .sortlabel{font-size:12px; color:var(--ink-3)}
+  .sortopt{
+    font:500 12px/1 sans-serif; padding:5px 10px; border-radius:7px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink-2); cursor:pointer;
+  }
+  .sortopt[aria-pressed="true"]{background:var(--accent-soft); border-color:var(--accent); color:var(--accent)}
+
+  .boxtag{font-family:ui-monospace,monospace; font-size:10px; color:var(--ink-3)}
+  .boxtag[hidden]{display:none}
+
   section.box{margin-top:22px}
   section.box h2{
     font-size:13px; font-weight:600; color:var(--ink-2); margin:0 0 8px;
@@ -83,6 +94,7 @@
   .cell:has(button.resend:not([hidden])){opacity:.55; padding:6px 10px}
   .cell:has(button.resend:not([hidden])) .shot,
   .cell:has(button.resend:not([hidden])) .hint,
+  .cell:has(button.resend:not([hidden])) .boxtag,
   .cell:has(button.resend:not([hidden])) input,
   .cell:has(button.resend:not([hidden])) button.skip{display:none}
 
@@ -106,6 +118,12 @@
   <h1>ぴあ CAPTCHA 答え合わせ（未回答キュー）</h1>
   <span class="stat">未回答 <b id="topCount">—</b> 件・最終更新 <b id="topUpdated">—</b></span>
   <a class="boxeslink" href="boxes.html">箱別シート（過去分）</a>
+  <div class="sortbar" id="sortbar">
+    <span class="sortlabel">並び替え:</span>
+    <button type="button" class="sortopt" data-mode="conf_asc">確信度が低い順（既定）</button>
+    <button type="button" class="sortopt" data-mode="conf_desc">確信度が高い順</button>
+    <button type="button" class="sortopt" data-mode="box">最新の箱順</button>
+  </div>
 </header>
 
 <main id="queue"></main>
@@ -121,17 +139,29 @@
   var ISSUE_BODY_MAX_LEN = 7000;
   var ISSUE_CHUNK_SIZE = 100;
   var LS = "pia-queue-page-v1";
+  var LS_MODE = "pia-queue-page-mode-v1";
+  var SORT_MODES = {conf_asc: 1, conf_desc: 1, box: 1};
 
   var main = document.getElementById("queue");
   var topCount = document.getElementById("topCount");
   var topUpdated = document.getElementById("topUpdated");
   var emptyNote = document.getElementById("emptyNote");
   var sendbar = document.getElementById("sendbar");
+  var sortbar = document.getElementById("sortbar");
 
   var state = {};       // sha8 -> {answer, unreadable, reviewed, sent, gone}
   var cells = {};       // sha8 -> DOM cell
-  var boxSections = {}; // box_id -> DOM section
+  var boxSections = {}; // box_id -> DOM section（並び替えmode="box"のときだけ使う）
+  var flatList = null;  // 並び替えmode="conf_asc"/"conf_desc"のときの単一グリッド
   var itemBySha = {};   // sha8 -> 最新のqueue.json item（gone後の表示用に保持）
+
+  function readMode(){
+    try {
+      var m = localStorage.getItem(LS_MODE);
+      return SORT_MODES[m] ? m : "conf_asc";
+    } catch (e) { return "conf_asc"; }
+  }
+  var currentMode = readMode();  // 既定=確信度が低い順（2026-09-14 拓也指示で既定化）
 
   function localRead(){
     try { return JSON.parse(localStorage.getItem(LS) || "{}"); } catch (e) { return {}; }
@@ -152,6 +182,9 @@
 
     var sha = document.createElement("div");
     sha.className = "sha"; sha.textContent = it.sha8;
+
+    var tag = document.createElement("div");
+    tag.className = "boxtag"; tag.hidden = true;  // 表示可否とラベルは layout() が毎回設定する
 
     var shot = document.createElement("div");
     shot.className = "shot";
@@ -188,7 +221,7 @@
       persist(); tally();
     });
 
-    cell.appendChild(sha); cell.appendChild(shot); cell.appendChild(hint); cell.appendChild(row);
+    cell.appendChild(sha); cell.appendChild(tag); cell.appendChild(shot); cell.appendChild(hint); cell.appendChild(row);
     cell.appendChild(resend);
 
     var s = st(it.sha8);
@@ -265,14 +298,11 @@
 
   // ---------- queue.json との突き合わせ（reconcile） ----------
   function reconcile(data){
-    var boxOrder = [];
-    var itemsByBox = {};
     var seen = {};
     (data.items || []).forEach(function(it){
-      if (!itemsByBox[it.box_id]) { itemsByBox[it.box_id] = []; boxOrder.push(it.box_id); }
-      itemsByBox[it.box_id].push(it);
       seen[it.sha8] = true;
       itemBySha[it.sha8] = it;
+      if (!cells[it.sha8]) cells[it.sha8] = buildCell(it);
     });
 
     // queue.jsonから消えた項目
@@ -303,6 +333,89 @@
     });
     persist();
 
+    layout();  // 並び替え（既定=確信度が低い順）はDOMを作り直さず既存カードを動かすだけ
+
+    tally();
+    topUpdated.textContent = new Date().toLocaleTimeString("ja-JP", {hour:"2-digit", minute:"2-digit"});
+    emptyNote.hidden = !!Object.keys(cells).length;
+  }
+
+  function boxHeadingHtml(boxTime, remaining){
+    return (boxTime || "") + " <span class=\"rest\">残り " + remaining + " 件</span>";
+  }
+
+  // ---------- 並び替え（3択: 確信度が低い順(既定)/高い順/最新の箱順） ----------
+  // `measure/box_ingest.py`の`sort_items`と同じ規約（欠損は向きに関わらず最後、
+  // タイブレークは「箱が新しい順→sha8順」）をJS側でも保つ。
+  function compareItems(a, b, mode){
+    if (mode === "box") return tieBreak(a, b);
+    var ca = (typeof a.ai_conf === "number") ? a.ai_conf : null;
+    var cb = (typeof b.ai_conf === "number") ? b.ai_conf : null;
+    if (ca === null && cb === null) return tieBreak(a, b);
+    if (ca === null) return 1;
+    if (cb === null) return -1;
+    if (ca === cb) return tieBreak(a, b);
+    var diff = ca - cb;
+    return mode === "conf_desc" ? -diff : diff;
+  }
+  function tieBreak(a, b){
+    var bta = a.box_time || "", btb = b.box_time || "";
+    if (bta !== btb) return bta < btb ? 1 : -1;  // 箱が新しい順
+    var sa = a.sha8 || "", sb = b.sha8 || "";
+    return sa < sb ? -1 : (sa > sb ? 1 : 0);      // sha8順
+  }
+  function sortedShas(mode){
+    var shas = Object.keys(cells);
+    shas.sort(function(shaA, shaB){
+      var a = itemBySha[shaA] || {sha8: shaA};
+      var b = itemBySha[shaB] || {sha8: shaB};
+      return compareItems(a, b, mode);
+    });
+    return shas;
+  }
+  function boxLabel(it){
+    return (it && it.box_time) ? it.box_time.slice(5) : "";  // 先頭の年を削って短く（MM-DD HH:MM:SS）
+  }
+
+  function layout(){
+    var shas = sortedShas(currentMode);
+    var showTag = currentMode !== "box";  // 箱順のときは従来の見出しでまとまるのでタグは要らない
+
+    shas.forEach(function(sha8){
+      var tag = cells[sha8].querySelector(".boxtag");
+      if (!tag) return;
+      tag.hidden = !showTag;
+      tag.textContent = showTag ? boxLabel(itemBySha[sha8]) : "";
+    });
+
+    if (currentMode === "box") renderGrouped(shas); else renderFlat(shas);
+  }
+
+  function renderFlat(shas){
+    Object.keys(boxSections).forEach(function(boxId){
+      boxSections[boxId].remove(); delete boxSections[boxId];
+    });
+    if (!flatList) {
+      flatList = document.createElement("div");
+      flatList.className = "cells";
+      flatList.id = "flatCells";
+    }
+    main.appendChild(flatList);
+    shas.forEach(function(sha8){ flatList.appendChild(cells[sha8]); });
+  }
+
+  function renderGrouped(shas){
+    if (flatList && flatList.parentNode) flatList.remove();
+
+    var boxOrder = [];
+    var byBox = {};
+    shas.forEach(function(sha8){
+      var it = itemBySha[sha8];
+      var boxId = it ? it.box_id : "?";
+      if (!byBox[boxId]) { byBox[boxId] = []; boxOrder.push(boxId); }
+      byBox[boxId].push(sha8);
+    });
+
     boxOrder.forEach(function(boxId){
       var sec = boxSections[boxId];
       if (!sec) {
@@ -317,34 +430,40 @@
       }
       main.appendChild(sec);  // 末尾へ移動＝boxOrder(新しい順)どおりに並ぶ
       var list = sec.querySelector(".cells");
-      itemsByBox[boxId].forEach(function(it){
-        var cell = cells[it.sha8];
-        if (!cell) { cell = buildCell(it); cells[it.sha8] = cell; }
-        list.appendChild(cell);
+      var firstItem = null;
+      byBox[boxId].forEach(function(sha8){
+        list.appendChild(cells[sha8]);
+        if (!firstItem) firstItem = itemBySha[sha8];
       });
-      var remaining = itemsByBox[boxId].filter(function(it){
-        var s = state[it.sha8]; return !(s && s.reviewed);
+      var remaining = byBox[boxId].filter(function(sha8){
+        var s = state[sha8]; return !(s && s.reviewed);
       }).length;
       sec.querySelector("h2").innerHTML =
-        boxHeadingHtml(itemsByBox[boxId][0].box_time, remaining);
+        boxHeadingHtml(firstItem ? firstItem.box_time : "", remaining);
     });
 
-    // 空になった箱セクションは畳む（見出しは残っている="gone"セルだけの箱も一応残す）
+    // 空になった箱セクション・今回のsortedShasに出てこない箱は畳む
     Object.keys(boxSections).forEach(function(boxId){
-      var sec = boxSections[boxId];
-      if (!sec.querySelector(".cells").children.length) {
-        sec.remove(); delete boxSections[boxId];
+      if (boxOrder.indexOf(boxId) === -1) {
+        boxSections[boxId].remove(); delete boxSections[boxId];
       }
     });
-
-    tally();
-    topUpdated.textContent = new Date().toLocaleTimeString("ja-JP", {hour:"2-digit", minute:"2-digit"});
-    emptyNote.hidden = !!Object.keys(cells).length;
   }
 
-  function boxHeadingHtml(boxTime, remaining){
-    return (boxTime || "") + " <span class=\"rest\">残り " + remaining + " 件</span>";
+  function applySortButtons(){
+    Array.prototype.forEach.call(sortbar.querySelectorAll(".sortopt"), function(btn){
+      btn.setAttribute("aria-pressed", btn.dataset.mode === currentMode ? "true" : "false");
+    });
   }
+  sortbar.addEventListener("click", function(e){
+    var btn = e.target.closest(".sortopt");
+    if (!btn || !SORT_MODES[btn.dataset.mode]) return;
+    currentMode = btn.dataset.mode;
+    try { localStorage.setItem(LS_MODE, currentMode); } catch (err) {}
+    applySortButtons();
+    layout();
+  });
+  applySortButtons();
 
   function tally(){
     var n = 0;
