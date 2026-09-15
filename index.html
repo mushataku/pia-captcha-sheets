@@ -55,6 +55,8 @@
   .cell[data-state="ok"]{border-color:color-mix(in srgb,var(--done) 45%,var(--line)); opacity:.7}
   .cell[data-state="ok"]:focus-within{opacity:1}
   .cell[data-state="skip"]{border-color:color-mix(in srgb,var(--warn) 45%,var(--line)); background:var(--warn-soft); opacity:.7}
+  .cell[data-state="ai"]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+  .cell[data-state="ai"] input.ans{color:var(--accent)}
   .cell[data-state="gone"]{border-style:dashed; opacity:.6}
   .cell .sha{font-family:ui-monospace,monospace; font-size:10.5px; color:var(--ink-3)}
   .shot{background:#fff; border:1px solid var(--line); border-radius:6px; display:grid; place-items:center; padding:5px}
@@ -178,7 +180,7 @@
   var sendbar = document.getElementById("sendbar");
   var sortbar = document.getElementById("sortbar");
 
-  var state = {};       // sha8 -> {answer, unreadable, reviewed, sent, gone}
+  var state = {};       // sha8 -> {answer, unreadable, reviewed, sent, gone, aiFilled}
   var cells = {};       // sha8 -> DOM cell
   var boxSections = {}; // box_id -> DOM section（並び替えmode="box"のときだけ使う）
   var flatList = null;  // 並び替えmode="conf_asc"/"conf_desc"のときの単一グリッド
@@ -201,6 +203,8 @@
   state = localRead();
 
   function st(sha8){ return state[sha8] || (state[sha8] = {}); }
+  // aiFilled=true＝AI予測をプリフィルしたまま人がまだ触っていない（送信対象には入る。paint()の見た目区別用）
+  function cellIsHandled(s){ return !!(s && (s.gone || (s.reviewed && !s.aiFilled))); }
 
   // ---------- セル生成 ----------
   function buildCell(it){
@@ -225,7 +229,7 @@
     hint.className = "hint";
     var gbtn = document.createElement("button");
     gbtn.type = "button"; gbtn.textContent = it.ai_pred;
-    gbtn.title = "AIの予測を入力欄に入れる";
+    gbtn.title = "AIの予測に戻す";
     var conf = document.createElement("span");
     conf.className = "conf"; conf.textContent = Math.round((it.ai_conf || 0) * 100) + "%";
     hint.appendChild(gbtn); hint.appendChild(conf);
@@ -257,6 +261,11 @@
     if (s.gone) {
       applyGoneUi(cell, it);
     } else {
+      // 保存済み回答があればそれ／無ければAI予測／それも無ければ空、の優先順（2026-09-15 pia-queue-prefill-ai-pred）。
+      // AI予測で埋めた場合は reviewed も立てる＝拓也が触らないまま送信してもAI予測が回答として登録される。
+      if (!s.answer && !s.unreadable && it.ai_pred) {
+        s.answer = it.ai_pred; s.reviewed = true; s.aiFilled = true;
+      }
       inp.value = s.answer || "";
       paint(cell, s);
       resend.hidden = !s.sent;
@@ -271,6 +280,7 @@
       var v = inp.value.replace(/[^0-9]/g, "").slice(0, 6);
       if (v !== inp.value) inp.value = v;
       var s2 = st(it.sha8);
+      delete s2.aiFilled;  // 人が編集した＝AI予測のまま扱いを外す
       s2.answer = v; s2.unreadable = false;
       s2.reviewed = v.length === 6;
       paint(cell, s2); tally(); persist();
@@ -288,6 +298,7 @@
     });
     skip.addEventListener("click", function(){
       var s2 = st(it.sha8);
+      delete s2.aiFilled;  // 「読めない」判断も人の操作＝AI予測のまま扱いを外す
       s2.unreadable = !s2.unreadable;
       if (s2.unreadable) { s2.answer = ""; s2.reviewed = true; inp.value = ""; }
       else { s2.reviewed = false; }
@@ -298,7 +309,7 @@
   }
 
   function paint(cell, s){
-    cell.dataset.state = s.unreadable ? "skip" : (s.reviewed ? "ok" : "todo");
+    cell.dataset.state = s.unreadable ? "skip" : (s.aiFilled ? "ai" : (s.reviewed ? "ok" : "todo"));
     var inp = cell.querySelector("input.ans");
     if (inp) inp.disabled = false;
   }
@@ -338,8 +349,10 @@
     Object.keys(cells).forEach(function(sha8){
       if (seen[sha8]) return;
       var s = st(sha8);
-      if (s.sent || !s.reviewed) {
-        // 自分が送って取り込まれた・もともと未入力＝黙って消す
+      if (s.sent || !s.reviewed || s.aiFilled) {
+        // 自分が送って取り込まれた・もともと未入力・AI予測のまま人が未確認＝黙って消す
+        // （aiFilledは他人の回答と見た目が区別できない=「他の人が回答済み」の幽霊カードに
+        // してはいけない・2026-09-15 land前critic指摘）
         var cell = cells[sha8];
         if (cell && cell.parentNode) cell.parentNode.removeChild(cell);
         delete cells[sha8];
@@ -465,7 +478,7 @@
         if (!firstItem) firstItem = itemBySha[sha8];
       });
       var remaining = byBox[boxId].filter(function(sha8){
-        var s = state[sha8]; return !(s && s.reviewed);
+        return !cellIsHandled(state[sha8]);
       }).length;
       sec.querySelector("h2").innerHTML =
         boxHeadingHtml(firstItem ? firstItem.box_time : "", remaining);
@@ -497,8 +510,7 @@
   function tally(){
     var n = 0;
     Object.keys(cells).forEach(function(sha8){
-      var s = state[sha8];
-      if (!(s && (s.reviewed || s.gone))) n++;
+      if (!cellIsHandled(state[sha8])) n++;
     });
     topCount.textContent = n;
     renderSendbar();
