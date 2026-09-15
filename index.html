@@ -96,6 +96,7 @@
     font-family:ui-monospace,monospace; font-size:19px; font-weight:600; line-height:normal;
     font-variant-numeric:tabular-nums; font-kerning:none; text-align:left; white-space:pre;
     letter-spacing:.8ch; padding:6px 2px 6px .8ch; border:1px solid transparent; border-top-width:0;
+    --gap:.8ch;  /* 字間。下の選択の目印（.digits span.sel::before）が半ピッチの計算に使う */
   }
   @supports (width:1cqw){
     /* 等間隔は letter-spacing と padding-left を同じ --gap にして作る。100cqw＝入力欄の外寸・ch＝数字1字の幅。
@@ -106,9 +107,11 @@
     display:block; width:100%; min-width:0; color:transparent; caret-color:var(--ink);
     background:var(--surface-2); border-color:var(--line); border-radius:0 0 7px 7px;
   }
-  /* 選択中の文字にも color:transparent を効かせる（既定の ::selection は白抜きで描く）。選択は淡い帯で分かり、
-     文字は上の .digits が描く＝状態色・diff色がそのまま読める */
-  input.ans::selection{color:transparent; background:rgba(47,109,181,.22)}
+  /* 選択中の文字にも color:transparent を効かせる（既定の ::selection は白抜きで描く）。文字は上の .digits が
+     描く＝状態色・diff色がそのまま読める。帯も透明にする（2026-09-16 pia-queue-align-cont3-polish）: 入力欄
+     自身の選択帯は letter-spacing のぶん各字の右へ伸び、「3」を選ぶと3と8の間の余白まで塗られて目印が右に
+     ずれて見えた。選択の目印は下の .digits span.sel::before だけが描く */
+  input.ans::selection{color:transparent; background:transparent}
   input.ans::placeholder{color:var(--ink-3); letter-spacing:normal}
   input.ans:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
   input.ans:disabled{opacity:.6}
@@ -123,11 +126,15 @@
      `.digits span.diff`(0,2,1)に勝ち、人が直し終えた桁が一度も差分色にならなかった。
      診断色は状態色より必ず勝たせる（!important）。 */
   .digits span.diff{color:var(--diff) !important}
-  /* land前critic指摘・中(cont2): letter-spacingは字の右側にだけ付くため、透明inputの
-     ::selectionが塗る帯は選択範囲の右側にletter-spacing分はみ出し、見えている桁と1桁ずれて
-     見える。.digits側（＝見えている桁そのもの）にも選択のハイライトを重ねて正しい位置を示す
-     （::selectionの淡い帯は既存のまま残す＝「選択中は白抜きが出ない」既存テストの前提を崩さない）。 */
-  .digits span.sel{background:rgba(47,109,181,.22); border-radius:2px}
+  /* 選択の目印（2026-09-16 pia-queue-align-cont3-polish で .digits 側に一本化）: span の箱は「字＋右側の
+     letter-spacing」なので、箱の背景を塗ると帯が字の右へ半字間ずれる（cont2 の span.sel{background} も
+     入力欄の ::selection と同じ向きにずれていた）。::before で「字の中心 ± 1ピッチの半分」を塗る＝字に
+     対して左右対称で、隣り合う桁を選ぶと帯が切れ目なくつながる。z-index:-1＝.digits の文字の下に敷く。 */
+  .digits span{position:relative}
+  .digits span.sel::before{
+    content:""; position:absolute; top:0; bottom:0; z-index:-1;
+    left:calc(var(--gap) / -2); right:calc(var(--gap) / 2); background:rgba(47,109,181,.22);
+  }
 
   .ctrlrow{display:flex; align-items:center; gap:5px; margin-top:5px}
   button.skip{
@@ -172,10 +179,16 @@
     font:500 13px/1 sans-serif; padding:9px 10px; border-radius:9px; border:1px solid var(--line);
     background:var(--surface); color:var(--ink); width:9em;
   }
-  .sendbar .status{font-size:12.5px; color:var(--done); font-weight:600; flex-basis:100%; text-align:center}
-  .sendbar .status[hidden]{display:none}
-  .sendbar .barstatus[hidden]{display:none}
+  /* 状態表示は1行だけ（2026-09-16 pia-queue-align-cont3-polish: 旧 #sendStatus と #actionStatus に
+     「届きました（N件）」が2行並んでいた）。ボタンの行の下に置く（order＝ボタンの並びは動かさない）。
+     空でも1行ぶんの高さを確保する（land前critic 中: 行が出たり消えたりすると固定バーの高さが変わって
+     ボタンの行が上下にずれ、「回答を送る」のダブルクリックの2回目が上の「見えている未確認N件は合ってる」に
+     当たって、人が見ていない札を確定していた） */
+  .sendbar .barstatus{font-size:12.5px; line-height:1.5; min-height:1.5em; color:var(--done); font-weight:600;
+    flex-basis:100%; text-align:center; order:1}
+  .sendbar .barstatus[hidden]{display:block; visibility:hidden}
   .fallback{
+    order:2;
     flex-basis:100%; background:var(--warn-soft); border:1px solid var(--warn); border-radius:9px;
     padding:10px; display:flex; flex-direction:column; gap:6px;
   }
@@ -275,6 +288,11 @@
   function toHalfWidthDigits(s){
     return String(s).replace(/[０-９]/g, function(ch){ return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); });
   }
+  var NAV_KEYS = {ArrowLeft: 1, ArrowRight: 1, ArrowUp: 1, ArrowDown: 1, Home: 1, End: 1, PageUp: 1, PageDown: 1};
+  // 「全部打ち直す」扱いか＝欄が空か、6桁全部が選ばれている（自動で次の札へ進むのはこのときだけ）
+  function selectionCoversAll(inp){
+    return inp.value.length === 0 || (inp.selectionStart === 0 && inp.selectionEnd === inp.value.length);
+  }
   // aiFilled=true＝AI予測をプリフィルしたまま人がまだ触っていない（送信対象には入る。paint()の見た目区別用）
   function cellIsHandled(s){ return !!(s && (s.gone || (s.reviewed && !s.aiFilled))); }
 
@@ -292,6 +310,7 @@
       if (ch && aiPred[i] && ch !== aiPred[i]) span.className = "diff";
       digitsEl.appendChild(span);
     }
+    syncSelectionMark();  // 桁を作り直すと選択の目印（.sel）が消える＝入力欄が選択中なら付け直す
   }
 
   // ---------- セル生成 ----------
@@ -360,10 +379,30 @@
       inp.focus({preventScroll:true});
     });
     inp.addEventListener("focus", function(){ inp.select(); inp._retypeSession = true; });
+    // キーボードで選択を動かしたとき（Shift+←→・Home/End・Ctrl+A）も「全部打ち直すか」を選択範囲から
+    // 決め直す（2026-09-16 pia-queue-align-cont3-polish: 全選択で入って Shift+← で1桁だけ選び直して打つと、
+    // フォーカス時の true が残ったまま次の札へ飛んでいた＝桁クリックで直した誤操作がキーボード経路に残っていた）。
+    // keydown の時点では選択はまだ動いていないので印だけ付け、動いた後の keyup か次の打鍵の beforeinput の
+    // 早いほうで読む（setTimeout で読むと、間を置かずに打った打鍵がタイマーより先に処理されて間に合わない）。
+    inp.addEventListener("keydown", function(e){
+      var selectAll = (e.ctrlKey || e.metaKey) && (e.key === "a" || e.key === "A");
+      if (NAV_KEYS[e.key] || selectAll) inp._selMoved = true;
+    });
+    inp.addEventListener("keyup", function(){
+      if (inp._selMoved) { inp._selMoved = false; inp._retypeSession = selectionCoversAll(inp); }
+    });
+    // 入力欄のドラッグ＆ドロップを止める（2026-09-16 pia-queue-align-cont3-polish）: 選んだ桁の上からドラッグを
+    // 始めるとブラウザ既定の「選択文字の移動」になり、桁の順番が黙って入れ替わった（204381→204831）。別の札の
+    // 欄へ落とすとその札の答えを丸ごと移していた（元の札は空・移った先は人の回答として送られる）。ドラッグは
+    // 「押した桁から離した桁までを選ぶ」（snapSelection）だけにする。
+    inp.addEventListener("dragstart", function(e){ e.preventDefault(); });
+    inp.addEventListener("drop", function(e){ e.preventDefault(); });
     // beforeinput: 全角→半角変換・区切り入り貼り付けの正規化・満杯の欄でキャレット位置に打つと
     // 次の桁を上書きする（追加して切り詰めるのではない）。変換中(IME)はそのまま表示させ、
     // compositionend で正規化する＝変換中に replace(/[^0-9]/g,"") が全角数字を消していた不具合の直し。
     inp.addEventListener("beforeinput", function(e){
+      // キーボードで選択を動かした直後の打鍵＝ここで「全部打ち直すか」を決める（上の keydown/keyup 参照）
+      if (inp._selMoved) { inp._selMoved = false; inp._retypeSession = selectionCoversAll(inp); }
       if (e.isComposing) return;
       var data = e.data;
       if (data == null) return;  // 削除系(inputType=delete*)等は素通りさせ、input側の正規化に任せる
@@ -373,9 +412,12 @@
       var start = inp.selectionStart, end = inp.selectionEnd;
       var before = old.slice(0, start);
       var after = old.slice(end);
-      if (start === end && old.length >= 6) {
-        // 満杯の欄でキャレット位置に打つ＝続きの桁を上書きする（末尾が切り詰められて消えるのを防ぐ）
-        after = after.slice(Math.min(after.length, digits.length));
+      if (old.length >= 6) {
+        // 満杯の欄で打つ・貼る＝選んでいた桁数より多いぶんは続きの桁を上書きする（押し出された末尾が
+        // 切り詰められて黙って消えるのを防ぐ）。キャレットだけなら打った桁数ぶん上書き。1桁を選んで2桁を
+        // 貼ったら1桁ぶん上書き（2026-09-16 pia-queue-align-cont3-polish: 204381 の2桁目を選んで「77」を
+        // 貼ると 277438 になり、末尾の1が消えていた）
+        after = after.slice(Math.min(after.length, Math.max(0, digits.length - (end - start))));
       }
       e.preventDefault();
       inp.value = (before + digits + after).slice(0, 6);
@@ -535,30 +577,29 @@
     var lo = Math.min(a.index, b.index), hi = Math.max(a.index, b.index);
     inp.setSelectionRange(lo, hi + 1, x1 < x0 ? "backward" : "forward");
   }
-  // 選択範囲を .digits 側（見えている桁そのもの）にもハイライトする（land前critic指摘・中:
-  // 透明inputの::selectionは letter-spacing 分だけ右にはみ出して見える桁とずれるため、正しい
-  // 位置の目印をもう1つ重ねる）。selectionchangeはクリック・ドラッグ・Shift+クリック・
-  // キーボードでの選択変更をまとめて拾える。
-  function clearDigitSelectionHighlight(){
+  // 選択の目印（2026-09-16 pia-queue-align-cont3-polish で一本化）: 入力欄自身の選択帯は CSS で消し、
+  // 目印は .digits の span.sel だけが描く。したがって目印は「フォーカス中の入力欄の選択範囲」と常に
+  // 一致していなければならない。selectionchange はクリック・ドラッグ・キーボードの選択変更をまとめて
+  // 拾えるが、それだけに頼ると取りこぼす環境（スマホの日本語入力など）があるので keyup・mouseup・
+  // input・select・focusin/focusout でも同じ関数で同期する。フォーカスが外れたら消す（Tab で
+  // 「読めない」へ移ったときに目印だけ残っていた＝cont2 の land前critic 軽微）。
+  function syncSelectionMark(){
+    var el = document.activeElement;
+    var inp = (el && el.matches && el.matches("input.ans") && main.contains(el) && !el.disabled) ? el : null;
+    var cell = inp ? inp.closest(".cell") : null;
     var prev = main.querySelectorAll(".digits span.sel");
     for (var i = 0; i < prev.length; i++) prev[i].classList.remove("sel");
-  }
-  document.addEventListener("selectionchange", function(){
-    var el = document.activeElement;
-    if (!el || !el.matches || !el.matches("input.ans") || !main.contains(el)) {
-      clearDigitSelectionHighlight();
-      return;
-    }
-    var cell = el.closest(".cell");
-    clearDigitSelectionHighlight();
     if (!cell) return;
-    var s = el.selectionStart, e = el.selectionEnd;
-    if (s === e) return;  // キャレットのみ＝ハイライトは出さない
+    var s = inp.selectionStart, e = inp.selectionEnd;  // s === e（キャレットだけ）なら目印は出さない
     var spans = cell.querySelectorAll(".digits span");
-    for (var i = 0; i < spans.length; i++) {
-      if (i >= s && i < e) spans[i].classList.add("sel");
-    }
+    for (var j = s; j < e && j < spans.length; j++) spans[j].classList.add("sel");
+  }
+  document.addEventListener("selectionchange", syncSelectionMark);
+  ["keyup", "input", "select", "focusin", "mouseup", "touchend"].forEach(function(type){
+    main.addEventListener(type, syncSelectionMark);
   });
+  // focusout の最中は activeElement がまだ移り切っていない＝移った後に読む
+  main.addEventListener("focusout", function(){ setTimeout(syncSelectionMark, 0); });
 
   var digitPress = null;
   // land前critic指摘・中: mousedownをmainだけで聞いていると、mouseupが来ない経路
@@ -599,9 +640,8 @@
       snapSelection(p.inp, p.x, x1, p.shift ? {start: p.anchorStart, end: p.anchorEnd} : null);
       // 結果の選択範囲が「全6桁」か「空」でなければ一部だけ直す意図＝自動で次の札へ進む対象から外す。
       // クリック直後のfocusハンドラがいったんtrueに戻すため、ここ（snap確定後）で最後に決める。
-      var full = p.inp.value.length === 0
-        || (p.inp.selectionStart === 0 && p.inp.selectionEnd === p.inp.value.length);
-      p.inp._retypeSession = full;
+      p.inp._retypeSession = selectionCoversAll(p.inp);
+      syncSelectionMark();  // snap で置き直した範囲に目印を合わせる（selectionchange の到着を待たない）
     }, 0);
   });
 
@@ -846,6 +886,16 @@
     }
   });
 
+  // 送信バーの状態表示は1行だけ（2026-09-16 pia-queue-align-cont3-polish: 旧版は送信結果を #actionStatus と
+  // #sendStatus の両方に書き、「届きました（N件）」が2行並んでいた）。一括確認・取り消し・送信の結果は最後の
+  // 1件だけをここに出す。「送信中…」は送るボタン自身が、送れなかった分は退避パネル（本文と LINE への案内）が
+  // 知らせるので、ここには書かない（同じことを2か所で言わない）。
+  function setStatus(text){
+    actionStatus.textContent = text;
+    actionStatus.hidden = !text;
+    scheduleBulkLabelUpdate();  // 行が増減すると送信バーの高さ＝「この画面」の帯の下端が動く
+  }
+
   // ---------- 画面ごとの一括確認（2026-09-15「この画面の残りは全部合ってる」） ----------
   // いま画面に見えているAI予測のまま未確認のカードだけをまとめて確定（human）にする。
   // 直前の一括確認だけ1回取り消せる（新しい一括確認を押すと取り消し権は上書きされる）。
@@ -894,7 +944,7 @@
   bulkConfirmBtn.addEventListener("click", function(){
     var targets = bulkTargets();
     if (!targets.length) {
-      actionStatus.textContent = "画面内に対象がありません"; actionStatus.hidden = false;
+      setStatus("画面内に対象がありません");
       return;
     }
     var snapshot = targets.map(function(sha8){ return {sha8: sha8, answer: state[sha8].answer}; });
@@ -907,24 +957,35 @@
     });
     lastBulk = snapshot;
     setBulkPreview(false);
-    bulkUndoBtn.hidden = false;
-    bulkUndoBtn.textContent = "取り消す（" + snapshot.length + "件）";
-    actionStatus.textContent = snapshot.length + "件を確定しました"; actionStatus.hidden = false;
-    tally(); persist();
+    setStatus(snapshot.length + "件を確定しました");
+    tally(); persist();  // tally→renderSendbar→updateBulkUndo が「取り消す（N件）」を出す
   });
+  // 取り消しで実際に戻る札（2026-09-16 pia-queue-align-cont3-polish: 件数は実数で出す。旧版は一括確認の件数を
+  // 出したままで、手直しして対象から外れた札まで「取り消す／取り消しました（N件）」に数えていた）。一括確認の
+  // 後に手で直した札・「読めない」にした札・送った札・他の人が回答済みになった札は戻らない＝数えない。
+  function undoableBulk(){
+    if (!lastBulk) return [];
+    return lastBulk.filter(function(entry){
+      var s2 = state[entry.sha8];
+      return !!(s2 && !s2.sent && !s2.gone && !s2.aiFilled && !s2.unreadable && s2.answer === entry.answer);
+    });
+  }
+  function updateBulkUndo(){
+    var n = undoableBulk().length;
+    bulkUndoBtn.hidden = !n;  // 戻る札が無くなったら出さない（押しても何も起きないボタンを残さない）
+    bulkUndoBtn.textContent = "取り消す（" + n + "件）";
+  }
   bulkUndoBtn.addEventListener("click", function(){
     if (!lastBulk) return;
-    lastBulk.forEach(function(entry){
+    var targets = undoableBulk();
+    targets.forEach(function(entry){
       var s2 = state[entry.sha8];
-      if (!s2) return;
-      if (s2.answer !== entry.answer) return;  // 一括確認の後に手で直した札は取り消しの対象から外す
       s2.aiFilled = true;
       var cell = cells[entry.sha8];
       if (cell) { paint(cell, s2); updatePicked(cell, entry.sha8); }
     });
-    actionStatus.textContent = "取り消しました（" + lastBulk.length + "件）"; actionStatus.hidden = false;
     lastBulk = null;
-    bulkUndoBtn.hidden = true;
+    setStatus("取り消しました（" + targets.length + "件）");
     tally(); persist();
   });
 
@@ -1050,23 +1111,20 @@
   }
 
   var sending = false;
-  var lastStatus = "";      // 「届きました（N件）」等・次の renderSendbar で表示
   var failedBodies = [];    // 送れなかった本文（退避パネルに出す）
 
   function sendPairs(pairs){
     if (sending) return;
     if (!pairs.length) return;
     var chunks = splitBodies(pairs);
-    sending = true; lastStatus = "送信中…"; failedBodies = [];
+    sending = true; setStatus(""); failedBodies = [];  // 前回の結果を残したまま「送信中…」と並べない
     renderSendbar();
     var delivered = 0;
     var i = 0;
     function next(){
       if (i >= chunks.length) {
         sending = false;
-        lastStatus = delivered ? "届きました（" + delivered + "件）" : "";
-        if (failedBodies.length) lastStatus = (delivered ? lastStatus + "・" : "") + "送れなかった分があります";
-        actionStatus.textContent = lastStatus; actionStatus.hidden = !lastStatus;
+        setStatus(delivered ? "届きました（" + delivered + "件）" : "");  // 送れなかった分は退避パネルが出す
         tally();
         return;
       }
@@ -1122,10 +1180,6 @@
   resendBtn.addEventListener("click", unsendAll);
   sendCtl.appendChild(resendBtn);
 
-  var statusEl = document.createElement("div");
-  statusEl.className = "status"; statusEl.id = "sendStatus"; statusEl.hidden = true;
-  sendCtl.appendChild(statusEl);
-
   var fallbackEl = document.createElement("div");
   fallbackEl.className = "fallback"; fallbackEl.id = "sendFallback"; fallbackEl.hidden = true;
   var fbP = document.createElement("p");
@@ -1156,7 +1210,7 @@
     resendBtn.hidden = !(waiting && !sending);
     resendBtn.textContent = "送信済み（反映待ち）をまとめて送り直す（" + waiting + "件）";
 
-    statusEl.textContent = lastStatus; statusEl.hidden = !lastStatus;
+    updateBulkUndo();
 
     fallbackEl.hidden = !failedBodies.length;
     if (failedBodies.length) fbTa.value = failedBodies.join("\n\n");
