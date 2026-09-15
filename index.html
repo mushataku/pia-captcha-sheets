@@ -8,7 +8,7 @@
   :root{
     --paper:#f6f7f9; --surface:#ffffff; --surface-2:#eef1f5;
     --ink:#161b22; --ink-2:#4d5766; --ink-3:#7a8494; --line:#d7dde6;
-    --accent:#2f6db5; --accent-soft:#e3edf9; --done:#2c7a5b; --warn:#9a6a24; --warn-soft:#f7efe0;
+    --accent:#2f6db5; --accent-soft:#e3edf9; --done:#2c7a5b; --done-soft:#e3f2ea; --warn:#9a6a24; --warn-soft:#f7efe0;
     --shadow:0 1px 2px rgba(22,27,34,.06),0 4px 14px rgba(22,27,34,.05);
   }
   *{box-sizing:border-box}
@@ -27,6 +27,10 @@
   header .stat b{color:var(--ink); font-weight:600}
   header a.boxeslink{margin-left:auto; font-size:12px; color:var(--ink-3); text-decoration:none}
   header a.boxeslink:hover{color:var(--accent)}
+  header button.jump{
+    font:600 12px/1 sans-serif; padding:5px 10px; border-radius:7px; border:1px solid var(--accent);
+    background:var(--accent-soft); color:var(--accent); cursor:pointer;
+  }
 
   .sortbar{display:flex; gap:6px; align-items:baseline; flex-basis:100%; order:10}
   .sortbar .sortlabel{font-size:12px; color:var(--ink-3)}
@@ -52,8 +56,13 @@
     background:var(--surface); border:1px solid var(--line); border-radius:10px;
     box-shadow:var(--shadow); padding:10px 10px 11px; display:flex; flex-direction:column; gap:8px;
   }
-  .cell[data-state="ok"]{border-color:color-mix(in srgb,var(--done) 45%,var(--line)); opacity:.7}
-  .cell[data-state="ok"]:focus-within{opacity:1}
+  /* 人が確認済み＝緑地（AI予測のまま＝青枠・未入力＝白と一目で分け、どこまで答えたかを色で追える・
+     2026-09-15 拓也。旧版は枠色を少し変えて全体を .7 に薄めるだけで ai と見分けにくかった） */
+  .cell[data-state="ok"]{border-color:var(--done); background:var(--done-soft)}
+  .cell[data-state="ok"] .shot{opacity:.45}
+  .cell[data-state="ok"]:focus-within .shot{opacity:1}
+  .cell[data-state="ok"] input.ans{color:var(--done); background:var(--surface)}
+  .cell:focus-within{box-shadow:0 0 0 2px var(--accent), var(--shadow)}  /* いま打っている札 */
   .cell[data-state="skip"]{border-color:color-mix(in srgb,var(--warn) 45%,var(--line)); background:var(--warn-soft); opacity:.7}
   .cell[data-state="ai"]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
   .cell[data-state="ai"] input.ans{color:var(--accent)}
@@ -142,7 +151,8 @@
 
 <header>
   <h1>ぴあ CAPTCHA 答え合わせ（未回答キュー）</h1>
-  <span class="stat">未回答 <b id="topCount">—</b> 件・最終更新 <b id="topUpdated">—</b></span>
+  <span class="stat">未確認 <b id="topCount">—</b> / 全 <b id="topTotal">—</b> 件・最終更新 <b id="topUpdated">—</b></span>
+  <button type="button" class="jump" id="jumpTodo" title="並び順で最初の未確認の札の入力欄へ移る">未確認の先頭へ ▶</button>
   <a class="boxeslink" href="boxes.html">箱別シート（過去分）</a>
   <div class="sortbar" id="sortbar">
     <span class="sortlabel">並び替え:</span>
@@ -176,6 +186,8 @@
   var main = document.getElementById("queue");
   var topCount = document.getElementById("topCount");
   var topUpdated = document.getElementById("topUpdated");
+  var topTotal = document.getElementById("topTotal");
+  var jumpTodo = document.getElementById("jumpTodo");
   var emptyNote = document.getElementById("emptyNote");
   var sendbar = document.getElementById("sendbar");
   var sortbar = document.getElementById("sortbar");
@@ -292,9 +304,12 @@
       var inputs = visibleInputs();
       var i = inputs.indexOf(inp);
       if (e.shiftKey) { if (i > 0) { inputs[i-1].focus(); inputs[i-1].select(); } return; }
-      if (inp.value.length === 6 && i >= 0 && i + 1 < inputs.length) {
-        inputs[i+1].focus(); inputs[i+1].select();
-      }
+      if (inp.value.length !== 6) return;
+      // Enter＝「この6桁で合っている」と人が確かめた合図。AI予測のまま流しても確認済みにする
+      // （旧版は次へ移るだけで ai のまま残り、確かめた札とまだ見ていない札が見分けられなかった・2026-09-15）
+      var s2 = st(it.sha8);
+      if (s2.aiFilled) { delete s2.aiFilled; s2.reviewed = true; paint(cell, s2); tally(); persist(); }
+      if (i >= 0 && i + 1 < inputs.length) { inputs[i+1].focus(); inputs[i+1].select(); }
     });
     skip.addEventListener("click", function(){
       var s2 = st(it.sha8);
@@ -328,7 +343,9 @@
   }
 
   function visibleInputs(){
-    return Array.prototype.slice.call(main.querySelectorAll('.cell:not([data-state="gone"]) input.ans'));
+    // 送信済みで畳んだ札の欄（display:none）は除く＝そこへ focus しても何も起きず Enter が足止めされる
+    return Array.prototype.slice.call(main.querySelectorAll('.cell:not([data-state="gone"]) input.ans'))
+      .filter(function(inp){ return inp.getClientRects().length > 0; });
   }
   function focusNext(fromInput){
     var inputs = visibleInputs();
@@ -338,6 +355,7 @@
 
   // ---------- queue.json との突き合わせ（reconcile） ----------
   function reconcile(data){
+    var keep = captureFocus();
     var seen = {};
     (data.items || []).forEach(function(it){
       seen[it.sha8] = true;
@@ -380,6 +398,21 @@
     tally();
     topUpdated.textContent = new Date().toLocaleTimeString("ja-JP", {hour:"2-digit", minute:"2-digit"});
     emptyNote.hidden = !!Object.keys(cells).length;
+    restoreFocus(keep);
+  }
+
+  // 60秒ごとの reconcile で入力中の札が並べ直しに巻き込まれても、フォーカスとカーソル位置を戻す
+  // （2026-09-15 拓也「数十秒で入力欄から外れてマウスで戻すのがだるい」）。動かす札は arrangeChildren が
+  // 最小にするので、ここは入力中の札そのものが動いた回（確信度の更新で順位が入れ替わった等）の保険。
+  function captureFocus(){
+    var el = document.activeElement;
+    if (!el || !el.matches || !el.matches("input.ans") || !main.contains(el)) return null;
+    return {el: el, start: el.selectionStart, end: el.selectionEnd};
+  }
+  function restoreFocus(keep){
+    if (!keep || document.activeElement === keep.el || keep.el.disabled || !main.contains(keep.el)) return;
+    keep.el.focus({preventScroll: true});  // focus ハンドラが全選択する→直後に元の範囲へ戻す
+    try { keep.el.setSelectionRange(keep.start, keep.end); } catch (e) {}
   }
 
   function boxHeadingHtml(boxTime, remaining){
@@ -419,6 +452,17 @@
     return (it && it.box_time) ? it.box_time.slice(5) : "";  // 先頭の年を削って短く（MM-DD HH:MM:SS）
   }
 
+  // parent の子を order の並びに揃える。既に正しい位置にあるノードは動かさない（appendChild で全部
+  // 並べ直すと、入力中の欄を含む札も一瞬DOMから外れてフォーカスが落ちる）。
+  function arrangeChildren(parent, order){
+    var prev = null;
+    order.forEach(function(node){
+      var want = prev ? prev.nextSibling : parent.firstChild;
+      if (want !== node) parent.insertBefore(node, want);
+      prev = node;
+    });
+  }
+
   function layout(){
     var shas = sortedShas(currentMode);
     var showTag = currentMode !== "box";  // 箱順のときは従来の見出しでまとまるのでタグは要らない
@@ -442,8 +486,8 @@
       flatList.className = "cells";
       flatList.id = "flatCells";
     }
-    main.appendChild(flatList);
-    shas.forEach(function(sha8){ flatList.appendChild(cells[sha8]); });
+    if (flatList.parentNode !== main) main.appendChild(flatList);
+    arrangeChildren(flatList, shas.map(function(sha8){ return cells[sha8]; }));
   }
 
   function renderGrouped(shas){
@@ -458,6 +502,7 @@
       byBox[boxId].push(sha8);
     });
 
+    var secOrder = [];
     boxOrder.forEach(function(boxId){
       var sec = boxSections[boxId];
       if (!sec) {
@@ -470,13 +515,13 @@
         sec.appendChild(h2); sec.appendChild(list);
         boxSections[boxId] = sec;
       }
-      main.appendChild(sec);  // 末尾へ移動＝boxOrder(新しい順)どおりに並ぶ
+      secOrder.push(sec);
       var list = sec.querySelector(".cells");
       var firstItem = null;
       byBox[boxId].forEach(function(sha8){
-        list.appendChild(cells[sha8]);
         if (!firstItem) firstItem = itemBySha[sha8];
       });
+      arrangeChildren(list, byBox[boxId].map(function(sha8){ return cells[sha8]; }));
       var remaining = byBox[boxId].filter(function(sha8){
         return !cellIsHandled(state[sha8]);
       }).length;
@@ -484,6 +529,7 @@
         boxHeadingHtml(firstItem ? firstItem.box_time : "", remaining);
     });
 
+    arrangeChildren(main, secOrder);  // boxOrder(新しい順)どおりに並べる
     // 空になった箱セクション・今回のsortedShasに出てこない箱は畳む
     Object.keys(boxSections).forEach(function(boxId){
       if (boxOrder.indexOf(boxId) === -1) {
@@ -509,12 +555,26 @@
 
   function tally(){
     var n = 0;
-    Object.keys(cells).forEach(function(sha8){
+    var shas = Object.keys(cells);
+    shas.forEach(function(sha8){
       if (!cellIsHandled(state[sha8])) n++;
     });
     topCount.textContent = n;
+    topTotal.textContent = shas.length;
     renderSendbar();
   }
+
+  // 「未確認の先頭へ」: 並び順で最初の未確認札（AI予測のまま・未入力）の入力欄へ移る＝見返しに上へ
+  // 戻った後でも、続きの位置へキーボードの手を戻せる
+  jumpTodo.addEventListener("click", function(){
+    var inputs = visibleInputs();
+    for (var i = 0; i < inputs.length; i++) {
+      if (cellIsHandled(state[inputs[i].closest(".cell").dataset.sha8])) continue;
+      inputs[i].scrollIntoView({block: "center"});
+      inputs[i].focus({preventScroll: true}); inputs[i].select();
+      return;
+    }
+  });
 
   // ---------- fetch ----------
   function loadQueue(){
