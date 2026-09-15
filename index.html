@@ -11,12 +11,14 @@
     --accent:#2f6db5; --accent-soft:#e3edf9; --done:#2c7a5b; --done-soft:#e3f2ea; --warn:#9a6a24; --warn-soft:#f7efe0;
     --diff:#b3401f;
     --shadow:0 1px 2px rgba(22,27,34,.06),0 4px 14px rgba(22,27,34,.05);
+    --sendbar-h:96px;
   }
   *{box-sizing:border-box}
+  html{scroll-padding-bottom:var(--sendbar-h)}
   body{
     background:var(--paper); color:var(--ink);
     font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI",system-ui,sans-serif;
-    line-height:1.5; margin:0; padding:0 16px 96px;
+    line-height:1.5; margin:0; padding:0 16px var(--sendbar-h);
   }
   header{
     position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--paper) 92%, transparent);
@@ -33,11 +35,6 @@
     background:var(--accent-soft); color:var(--accent); cursor:pointer;
   }
   header button.jump:disabled{opacity:.5; cursor:default}
-
-  /* 途中送信・画面ごとの一括確認（2026-09-15 pia-queue-dense-review・画面上部に固定＝ヘッダーがsticky） */
-  .actionbar{display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; flex-basis:100%; order:5}
-  .actionbar .barstatus{font-size:11.5px; color:var(--done); font-weight:600}
-  .actionbar button#bulkUndo{border-color:var(--warn); background:var(--warn-soft); color:var(--warn)}
 
   .sortbar{display:flex; gap:6px; align-items:baseline; flex-basis:100%; order:10}
   .sortbar .sortlabel{font-size:12px; color:var(--ink-3)}
@@ -68,6 +65,9 @@
   .cell[data-state="ok"] input.ans{background:var(--surface)}
   .cell[data-state="ok"] .digits span{color:var(--done)}
   .cell:focus-within{box-shadow:0 0 0 2px var(--accent), var(--shadow)}  /* いま打っている札 */
+  /* 「この画面の残りは全部合ってる」にマウスを乗せた/フォーカスしたときの対象プレビュー
+     （2026-09-15 pia-queue-align-bottom-actions・押す前に対象が画面で分かる） */
+  .cell.bulk-preview{box-shadow:0 0 0 2px var(--done), var(--shadow)}
   .cell[data-state="skip"]{border-color:color-mix(in srgb,var(--warn) 45%,var(--line)); background:var(--warn-soft); opacity:.7}
   .cell[data-state="ai"]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
   .cell[data-state="ai"] .digits span{color:var(--accent)}
@@ -123,6 +123,11 @@
      `.digits span.diff`(0,2,1)に勝ち、人が直し終えた桁が一度も差分色にならなかった。
      診断色は状態色より必ず勝たせる（!important）。 */
   .digits span.diff{color:var(--diff) !important}
+  /* land前critic指摘・中(cont2): letter-spacingは字の右側にだけ付くため、透明inputの
+     ::selectionが塗る帯は選択範囲の右側にletter-spacing分はみ出し、見えている桁と1桁ずれて
+     見える。.digits側（＝見えている桁そのもの）にも選択のハイライトを重ねて正しい位置を示す
+     （::selectionの淡い帯は既存のまま残す＝「選択中は白抜きが出ない」既存テストの前提を崩さない）。 */
+  .digits span.sel{background:rgba(47,109,181,.22); border-radius:2px}
 
   .ctrlrow{display:flex; align-items:center; gap:5px; margin-top:5px}
   button.skip{
@@ -153,12 +158,23 @@
     font:500 11.5px/1.2 sans-serif; padding:8px 12px; border-radius:9px; border:1px dashed var(--warn);
     background:var(--warn-soft); color:var(--warn); cursor:pointer;
   }
+  /* 途中送信・画面ごとの一括確認（もとはヘッダー固定。2026-09-15 pia-queue-align-bottom-actions で
+     「回答を送る」と同じ送信バーへ移設＝「この画面」の境界を送信バーの上端に揃えるため）。
+     大きさ・目立ち方は button.send と同格にする（旧 .jump 型にしない）。 */
+  .sendbar button.act{
+    font:600 13px/1 sans-serif; padding:10px 16px; border-radius:9px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink-2); cursor:pointer;
+  }
+  .sendbar button.act:disabled{opacity:.4; cursor:default}
+  .sendbar button#bulkConfirm{border-color:var(--done); background:var(--done-soft); color:var(--done)}
+  .sendbar button#bulkUndo{border-color:var(--warn); background:var(--warn-soft); color:var(--warn)}
   .sendbar input.name{
     font:500 13px/1 sans-serif; padding:9px 10px; border-radius:9px; border:1px solid var(--line);
     background:var(--surface); color:var(--ink); width:9em;
   }
   .sendbar .status{font-size:12.5px; color:var(--done); font-weight:600; flex-basis:100%; text-align:center}
   .sendbar .status[hidden]{display:none}
+  .sendbar .barstatus[hidden]{display:none}
   .fallback{
     flex-basis:100%; background:var(--warn-soft); border:1px solid var(--warn); border-radius:9px;
     padding:10px; display:flex; flex-direction:column; gap:6px;
@@ -183,12 +199,6 @@
   <span class="stat">未確認 <b id="topCount">—</b> / 全 <b id="topTotal">—</b> 件・最終更新 <b id="topUpdated">—</b></span>
   <button type="button" class="jump" id="jumpTodo" title="並び順で最初の未確認の札の入力欄へ移る">未確認の先頭へ ▶</button>
   <a class="boxeslink" href="boxes.html">箱別シート（過去分）</a>
-  <div class="actionbar" id="actionbar">
-    <button type="button" class="jump" id="sendTop" hidden>ここまで送る（<span id="sendTopN">0</span>件）</button>
-    <button type="button" class="jump" id="bulkConfirm">この画面の残りは全部合ってる</button>
-    <button type="button" class="jump" id="bulkUndo" hidden>取り消す</button>
-    <span class="barstatus" id="actionStatus" hidden></span>
-  </div>
   <div class="sortbar" id="sortbar">
     <span class="sortlabel">並び替え:</span>
     <button type="button" class="sortopt" data-mode="conf_asc">確信度が低い順（既定）</button>
@@ -200,7 +210,12 @@
 <main id="queue"></main>
 <p class="empty" id="emptyNote" hidden>未回答の画像はいまありません。</p>
 
-<div class="sendbar" id="sendbar"></div>
+<div class="sendbar" id="sendbar">
+  <button type="button" class="act" id="sendTop" hidden>ここまで送る（<span id="sendTopN">0</span>件）</button>
+  <button type="button" class="act" id="bulkConfirm">この画面の残りは全部合ってる</button>
+  <button type="button" class="act" id="bulkUndo" hidden>取り消す</button>
+  <span class="barstatus" id="actionStatus" hidden></span>
+</div>
 
 <script>
 (function(){
@@ -255,6 +270,11 @@
   state = localRead();
 
   function st(sha8){ return state[sha8] || (state[sha8] = {}); }
+
+  // 全角数字（日本語入力・全角貼り付け）を半角へ（2026-09-16 pia-queue-align-bottom-actions-cont2）
+  function toHalfWidthDigits(s){
+    return String(s).replace(/[０-９]/g, function(ch){ return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); });
+  }
   // aiFilled=true＝AI予測をプリフィルしたまま人がまだ触っていない（送信対象には入る。paint()の見た目区別用）
   function cellIsHandled(s){ return !!(s && (s.gone || (s.reviewed && !s.aiFilled))); }
 
@@ -297,7 +317,9 @@
     ansWrap.className = "ansWrap";
     var inp = document.createElement("input");
     inp.className = "ans"; inp.type = "text"; inp.inputMode = "numeric";
-    inp.autocomplete = "off"; inp.maxLength = 6;
+    inp.autocomplete = "off";
+    // maxLength は付けない（④未決: 「20-41 81」の貼り付けがブラウザに先に6文字へ切られ「2041」になる不具合の
+    // 原因だった）。桁数の切り詰めは beforeinput ハンドラが正規化してから行う。
     inp.placeholder = "6桁";
     var digits = document.createElement("div");
     digits.className = "digits"; digits.setAttribute("aria-hidden", "true");
@@ -331,12 +353,44 @@
     syncDigits(cell, inp.value);
     updatePicked(cell, it.sha8);
 
+    if (!it.ai_pred) revert.hidden = true;  // ④未決: AI予測が無い札で「AIに戻す」を押すとundefinedが入っていた
     revert.addEventListener("click", function(){
-      inp.value = it.ai_pred; inp.dispatchEvent(new Event("input"));
+      if (!it.ai_pred) return;
+      inp.value = it.ai_pred; inp._retypeSession = true; inp.dispatchEvent(new Event("input"));
       inp.focus({preventScroll:true});
     });
-    inp.addEventListener("focus", function(){ inp.select(); });
-    inp.addEventListener("input", function(){
+    inp.addEventListener("focus", function(){ inp.select(); inp._retypeSession = true; });
+    // beforeinput: 全角→半角変換・区切り入り貼り付けの正規化・満杯の欄でキャレット位置に打つと
+    // 次の桁を上書きする（追加して切り詰めるのではない）。変換中(IME)はそのまま表示させ、
+    // compositionend で正規化する＝変換中に replace(/[^0-9]/g,"") が全角数字を消していた不具合の直し。
+    inp.addEventListener("beforeinput", function(e){
+      if (e.isComposing) return;
+      var data = e.data;
+      if (data == null) return;  // 削除系(inputType=delete*)等は素通りさせ、input側の正規化に任せる
+      var digits = toHalfWidthDigits(data).replace(/[^0-9]/g, "");
+      if (!digits) return;
+      var old = inp.value;
+      var start = inp.selectionStart, end = inp.selectionEnd;
+      var before = old.slice(0, start);
+      var after = old.slice(end);
+      if (start === end && old.length >= 6) {
+        // 満杯の欄でキャレット位置に打つ＝続きの桁を上書きする（末尾が切り詰められて消えるのを防ぐ）
+        after = after.slice(Math.min(after.length, digits.length));
+      }
+      e.preventDefault();
+      inp.value = (before + digits + after).slice(0, 6);
+      var caret = Math.min(before.length + digits.length, inp.value.length);
+      inp.setSelectionRange(caret, caret);
+      inp.dispatchEvent(new Event("input"));
+    });
+    inp.addEventListener("compositionend", function(){
+      // 日本語入力確定時に全角数字を半角へ正規化する（変換中は書き換えない＝表示が乱れるため）
+      var digits = toHalfWidthDigits(inp.value).replace(/[^0-9]/g, "").slice(0, 6);
+      if (digits !== inp.value) inp.value = digits;
+      inp.dispatchEvent(new Event("input"));
+    });
+    inp.addEventListener("input", function(e){
+      if (e.isComposing) return;  // 変換中の正規化は compositionend に任せる
       var v = inp.value.replace(/[^0-9]/g, "").slice(0, 6);
       if (v !== inp.value) inp.value = v;
       var s2 = st(it.sha8);
@@ -345,7 +399,10 @@
       s2.answer = v; s2.unreadable = false;
       s2.reviewed = v.length === 6;
       paint(cell, s2); syncDigits(cell, v); updatePicked(cell, it.sha8); tally(); persist();
-      if (v.length === 6) focusNext(inp);
+      // 自動で次の札へ移るのは「全部打ち直したとき」（入力を始めた時点で全選択か空だった＝
+      // inp._retypeSession）だけにする。桁クリックで1桁だけ直したときは、その桁で次の札を
+      // 上書きしてしまわないようその札に留まる＝Enterで確定して次へ進む（親から09-16指摘）。
+      if (v.length === 6 && inp._retypeSession) focusNext(inp);
     });
     inp.addEventListener("keydown", function(e){
       if (e.key !== "Enter") return;
@@ -362,11 +419,20 @@
     });
     skip.addEventListener("click", function(){
       var s2 = st(it.sha8);
-      delete s2.aiFilled;  // 「読めない」判断も人の操作＝AI予測のまま扱いを外す
       if (s2.sent) delete s2.sent;  // 送信済みを直したら送信対象に戻す（inpと同じ理由）
       s2.unreadable = !s2.unreadable;
-      if (s2.unreadable) { s2.answer = ""; s2.reviewed = true; inp.value = ""; }
-      else { s2.reviewed = false; }
+      if (s2.unreadable) {
+        // 押す前の値と状態を退避＝押し間違えてもう一度押して戻したとき復元する（④未決）
+        s2.beforeSkip = {answer: s2.answer || "", aiFilled: !!s2.aiFilled};
+        delete s2.aiFilled;
+        s2.answer = ""; s2.reviewed = true; inp.value = "";
+      } else {
+        var prev = s2.beforeSkip || {answer: "", aiFilled: false};
+        delete s2.beforeSkip;
+        s2.answer = prev.answer; inp.value = prev.answer;
+        if (prev.aiFilled) { s2.aiFilled = true; s2.reviewed = true; }
+        else { delete s2.aiFilled; s2.reviewed = prev.answer.length === 6; }
+      }
       paint(cell, s2); syncDigits(cell, inp.value); updatePicked(cell, it.sha8); tally(); persist();
     });
 
@@ -445,7 +511,7 @@
     if (best < 0) return {index: -1, inside: false, right: false};
     return {index: best, inside: bestDist <= slots[best].pitch / 2, right: clientX > slots[best].center};
   }
-  function snapSelection(inp, x0, x1){
+  function snapSelection(inp, x0, x1, shiftAnchor){
     var cell = inp.closest(".cell");
     if (!cell) return;
     var slots = digitSlots(cell);
@@ -455,6 +521,13 @@
     if (Math.abs(x1 - x0) < 4) {
       // クリック: 字の無い右側の余白を押したときだけ末尾へキャレット（続きを打てる）
       if (!a.inside && a.right && slots.length < 6) { inp.setSelectionRange(slots.length, slots.length); return; }
+      if (shiftAnchor) {
+        // Shift+クリック: 既存の選択の端から、クリックした桁までを1つの範囲にまとめる
+        // （land前critic指摘・中: 素のinputと同じ「アンカーからクリック位置まで」の拡張）
+        var lo2 = Math.min(shiftAnchor.start, a.index), hi2 = Math.max(shiftAnchor.end, a.index + 1);
+        inp.setSelectionRange(lo2, hi2);
+        return;
+      }
       inp.setSelectionRange(a.index, a.index + 1);
       return;
     }
@@ -462,31 +535,92 @@
     var lo = Math.min(a.index, b.index), hi = Math.max(a.index, b.index);
     inp.setSelectionRange(lo, hi + 1, x1 < x0 ? "backward" : "forward");
   }
+  // 選択範囲を .digits 側（見えている桁そのもの）にもハイライトする（land前critic指摘・中:
+  // 透明inputの::selectionは letter-spacing 分だけ右にはみ出して見える桁とずれるため、正しい
+  // 位置の目印をもう1つ重ねる）。selectionchangeはクリック・ドラッグ・Shift+クリック・
+  // キーボードでの選択変更をまとめて拾える。
+  function clearDigitSelectionHighlight(){
+    var prev = main.querySelectorAll(".digits span.sel");
+    for (var i = 0; i < prev.length; i++) prev[i].classList.remove("sel");
+  }
+  document.addEventListener("selectionchange", function(){
+    var el = document.activeElement;
+    if (!el || !el.matches || !el.matches("input.ans") || !main.contains(el)) {
+      clearDigitSelectionHighlight();
+      return;
+    }
+    var cell = el.closest(".cell");
+    clearDigitSelectionHighlight();
+    if (!cell) return;
+    var s = el.selectionStart, e = el.selectionEnd;
+    if (s === e) return;  // キャレットのみ＝ハイライトは出さない
+    var spans = cell.querySelectorAll(".digits span");
+    for (var i = 0; i < spans.length; i++) {
+      if (i >= s && i < e) spans[i].classList.add("sel");
+    }
+  });
+
   var digitPress = null;
-  main.addEventListener("mousedown", function(e){
+  // land前critic指摘・中: mousedownをmainだけで聞いていると、mouseupが来ない経路
+  // （ドラッグ選択を外へ持ち出す・ウィンドウ外で離す等）でdigitPressが残り、次にmain外
+  // （ヘッダー等）を普通にクリックしたときの古いmouseupがそれを拾って無関係な選択を書き換える。
+  // documentで聞いて、入力欄以外へのmousedownでも確実にdigitPressを捨てる。
+  document.addEventListener("mousedown", function(e){
     var inp = (e.target && e.target.closest) ? e.target.closest("input.ans") : null;
-    // ダブルクリック（detail>=2）は既定の全選択のまま＝押し間違えたときに全部打ち直せる逃げ道を残す
-    digitPress = (inp && e.button === 0 && !inp.disabled && e.detail < 2) ? {inp: inp, x: e.clientX} : null;
+    if (!inp) { digitPress = null; return; }
+    // ダブルクリック（detail>=2）はdblclickハンドラ側で明示的に全選択する（snapが直前に置いた
+    // 一部選択のせいでブラウザ既定の語選択が発動しないことがある＝land前critic指摘・重大）。
+    digitPress = (e.detail < 2 && e.button === 0 && !inp.disabled)
+      ? {inp: inp, x: e.clientX, shift: e.shiftKey,
+         anchorStart: inp.selectionStart, anchorEnd: inp.selectionEnd}
+      : null;
+  });
+  // ダブルクリックの1回目のクリックが仕掛けた遅延snap（下のmouseup→setTimeout）が、dblclick
+  // ハンドラのinp.select()より後に発火すると全選択を上書きしてしまう（1回目のmousedown/mouseup
+  // が先に走り、2回目の一連が終わってからイベントループへ戻ったときにまとめて発火する経路が
+  // 実測で存在した）。世代カウンタで「その間にダブルクリックが起きた遅延snap」を無効化する。
+  var selectionGen = 0;
+  main.addEventListener("dblclick", function(e){
+    var inp = (e.target && e.target.closest) ? e.target.closest("input.ans") : null;
+    if (!inp) return;
+    selectionGen++;
+    inp.select();  // 既定の語選択に頼らず明示的に全選択（land前critic指摘・重大の直し）
+    inp._retypeSession = true;
   });
   document.addEventListener("mouseup", function(e){
     var p = digitPress; digitPress = null;
     if (!p) return;
     var x1 = e.clientX;
+    var gen = selectionGen;
     // 既定の当たり判定（クリック位置へのキャレット設定）が終わってから置き直す
     setTimeout(function(){
-      if (document.activeElement === p.inp) snapSelection(p.inp, p.x, x1);
+      if (gen !== selectionGen) return;  // 待っている間にダブルクリックが全選択で確定させた
+      if (document.activeElement !== p.inp) return;
+      snapSelection(p.inp, p.x, x1, p.shift ? {start: p.anchorStart, end: p.anchorEnd} : null);
+      // 結果の選択範囲が「全6桁」か「空」でなければ一部だけ直す意図＝自動で次の札へ進む対象から外す。
+      // クリック直後のfocusハンドラがいったんtrueに戻すため、ここ（snap確定後）で最後に決める。
+      var full = p.inp.value.length === 0
+        || (p.inp.selectionStart === 0 && p.inp.selectionEnd === p.inp.value.length);
+      p.inp._retypeSession = full;
     }, 0);
   });
 
-  // 画面（ヘッダーの下〜ウィンドウ下端）に「全体が」見えているカードだけを対象にする
-  // （2026-09-15「見えていないカードは確定しない」）。land前critic指摘・重大: 当初は1pxでも
-  // 重なれば可視としていたため、下端で切れて画像が見えていない札まで確定・送信されていた。
+  // 「この画面」＝ヘッダーの下端から送信バーの上端までの帯（2026-09-15 pia-queue-align-bottom-actions）。
+  // 帯にそのカードの画像と読みの行（.shot と .ansWrap）が両方とも完全に入っているカードだけを対象にする。
+  // 旧版はウィンドウ下端までを可視としていたため、送信バーの下に隠れた札まで「見えている」と数えていた
+  // （ボタンを下へ移すとバーが高くなり悪化する不具合・司令塔がコードを読んで特定）。
+  // land前critic指摘・重大: 当初は1pxでも重なれば可視としていたため、下端で切れて画像が見えていない
+  // 札まで確定・送信されていた（cellの外枠でなく.shot/.ansWrapを見る現行版でも同じ厳密さを保つ）。
   function isCardVisible(cell){
     var headerEl = document.querySelector("header");
     var hb = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
-    var r = cell.getBoundingClientRect();
-    var vh = window.innerHeight || document.documentElement.clientHeight;
-    return r.top >= hb && r.bottom <= vh;
+    var bottom = sendbar.getBoundingClientRect().top;
+    var shot = cell.querySelector(".shot");
+    var ansWrap = cell.querySelector(".ansWrap");
+    if (!shot || !ansWrap) return false;
+    var rs = shot.getBoundingClientRect();
+    var ra = ansWrap.getBoundingClientRect();
+    return rs.top >= hb && rs.bottom <= bottom && ra.top >= hb && ra.bottom <= bottom;
   }
 
   // ---------- queue.json との突き合わせ（reconcile） ----------
@@ -715,8 +849,10 @@
   // ---------- 画面ごとの一括確認（2026-09-15「この画面の残りは全部合ってる」） ----------
   // いま画面に見えているAI予測のまま未確認のカードだけをまとめて確定（human）にする。
   // 直前の一括確認だけ1回取り消せる（新しい一括確認を押すと取り消し権は上書きされる）。
+  // lastBulk は {sha8, answer} のスナップショット（②誤操作の穴: 一括確認の後に手で直した札を
+  // 取り消しの対象から外すため。sha8だけの配列だと「確定時と今で値が同じか」を判定できなかった）。
   var lastBulk = null;
-  bulkConfirmBtn.addEventListener("click", function(){
+  function bulkTargets(){
     var targets = [];
     Object.keys(cells).forEach(function(sha8){
       var cell = cells[sha8];
@@ -726,10 +862,42 @@
       if (!isCardVisible(cell)) return;  // 見えていないカードは確定しない
       targets.push(sha8);
     });
+    return targets;
+  }
+  function setBulkPreview(on){
+    var targets = on ? bulkTargets() : [];
+    Object.keys(cells).forEach(function(sha8){
+      cells[sha8].classList.toggle("bulk-preview", targets.indexOf(sha8) !== -1);
+    });
+  }
+  var bulkPreviewActive = false;  // ボタンにマウスを乗せている/フォーカス中か
+  var bulkRafPending = false;
+  function scheduleBulkLabelUpdate(){
+    if (bulkRafPending) return;
+    bulkRafPending = true;
+    requestAnimationFrame(function(){
+      bulkRafPending = false;
+      var n = bulkTargets().length;
+      bulkConfirmBtn.textContent = "見えている未確認 " + n + "件は合ってる";
+      bulkConfirmBtn.disabled = !n;
+      // land前critic指摘・中: ボタンに乗せたままスクロールすると印（.bulk-preview）が
+      // 対象外のカードに残っていた＝印も件数と同じrAFで撃ち直す。
+      if (bulkPreviewActive) setBulkPreview(true);
+    });
+  }
+  window.addEventListener("scroll", scheduleBulkLabelUpdate, {passive: true});
+  window.addEventListener("resize", scheduleBulkLabelUpdate);
+  bulkConfirmBtn.addEventListener("mouseenter", function(){ bulkPreviewActive = true; setBulkPreview(true); });
+  bulkConfirmBtn.addEventListener("mouseleave", function(){ bulkPreviewActive = false; setBulkPreview(false); });
+  bulkConfirmBtn.addEventListener("focus", function(){ bulkPreviewActive = true; setBulkPreview(true); });
+  bulkConfirmBtn.addEventListener("blur", function(){ bulkPreviewActive = false; setBulkPreview(false); });
+  bulkConfirmBtn.addEventListener("click", function(){
+    var targets = bulkTargets();
     if (!targets.length) {
       actionStatus.textContent = "画面内に対象がありません"; actionStatus.hidden = false;
       return;
     }
+    var snapshot = targets.map(function(sha8){ return {sha8: sha8, answer: state[sha8].answer}; });
     targets.forEach(function(sha8){
       var s2 = st(sha8);
       delete s2.aiFilled;
@@ -737,20 +905,22 @@
       paint(cells[sha8], s2);
       updatePicked(cells[sha8], sha8);
     });
-    lastBulk = targets;
+    lastBulk = snapshot;
+    setBulkPreview(false);
     bulkUndoBtn.hidden = false;
-    bulkUndoBtn.textContent = "取り消す（" + targets.length + "件）";
-    actionStatus.textContent = targets.length + "件を確定しました"; actionStatus.hidden = false;
+    bulkUndoBtn.textContent = "取り消す（" + snapshot.length + "件）";
+    actionStatus.textContent = snapshot.length + "件を確定しました"; actionStatus.hidden = false;
     tally(); persist();
   });
   bulkUndoBtn.addEventListener("click", function(){
     if (!lastBulk) return;
-    lastBulk.forEach(function(sha8){
-      var s2 = state[sha8];
+    lastBulk.forEach(function(entry){
+      var s2 = state[entry.sha8];
       if (!s2) return;
+      if (s2.answer !== entry.answer) return;  // 一括確認の後に手で直した札は取り消しの対象から外す
       s2.aiFilled = true;
-      var cell = cells[sha8];
-      if (cell) { paint(cell, s2); updatePicked(cell, sha8); }
+      var cell = cells[entry.sha8];
+      if (cell) { paint(cell, s2); updatePicked(cell, entry.sha8); }
     });
     actionStatus.textContent = "取り消しました（" + lastBulk.length + "件）"; actionStatus.hidden = false;
     lastBulk = null;
@@ -830,16 +1000,24 @@
   }
   function markSent(chunk){
     chunk.forEach(function(p){
-      var sha8 = p[0];
-      st(sha8).sent = true;
+      var sha8 = p[0], sentAnswer = p[1], sentSource = p[2];
+      var s = state[sha8];
+      if (!s) return;
+      var curAnswer = s.unreadable ? "?" : s.answer;
+      var curSource = s.aiFilled ? "ai_unconfirmed" : "human";
+      // ④未決: 送信中(fetch往復中)に編集・一括確認した札は、送った値・sourceと今のstateが
+      // 一致するときだけsentにする。ずれていたら直した値が二度と送られないので、送信対象に残す。
+      if (curAnswer !== sentAnswer || curSource !== sentSource) return;
+      s.sent = true;
       var cell = cells[sha8];
       if (cell) updatePicked(cell, sha8);
       // land前critic指摘・中: 送信済みの札が直前の一括確認の対象に残っていると、取り消しが
       // 「取り消せた」と表示しつつ実際は何も戻らず（サーバのhumanは残る・sentも残る）、
       // かつaiFilledだけ復活して未確認カウントに二度と減らないゾンビ状態になっていた。
       if (lastBulk) {
-        var idx = lastBulk.indexOf(sha8);
-        if (idx !== -1) lastBulk.splice(idx, 1);
+        for (var i = 0; i < lastBulk.length; i++) {
+          if (lastBulk[i].sha8 === sha8) { lastBulk.splice(i, 1); break; }
+        }
       }
     });
     if (lastBulk && !lastBulk.length) { lastBulk = null; bulkUndoBtn.hidden = true; }
@@ -920,16 +1098,45 @@
     document.body.removeChild(ta);
   }
 
-  // 名前欄は1回だけ作って使い回す（tally() のたびに作り直すと 60 秒ごとの reconcile で入力中の
-  // フォーカスが外れる）。送信ボタン等は ctl 側だけを作り直す。
+  // 送信バーの中身は1回だけ作って使い回す（2026-09-15 の名前欄と同じ理由:
+  // ④未決 renderSendbar() は毎回ボタンを作り直していたため、Tab でフォーカスした「回答を送る」が
+  // 60秒ごとの reconcile で外れていた。ここから先は文言と disabled/hidden だけを更新する。
   var nameInp = document.createElement("input");
   nameInp.className = "name"; nameInp.type = "text"; nameInp.placeholder = "名前（任意）";
   nameInp.maxLength = NAME_MAX_LEN; nameInp.value = readName(); nameInp.autocomplete = "off";
   nameInp.addEventListener("input", function(){ saveName(nameInp.value); });
   sendbar.appendChild(nameInp);
+
   var sendCtl = document.createElement("span");
   sendCtl.style.display = "contents";
   sendbar.appendChild(sendCtl);
+
+  var sendBtn = document.createElement("button");
+  sendBtn.type = "button"; sendBtn.className = "send";
+  sendBtn.addEventListener("click", sendAll);
+  sendCtl.appendChild(sendBtn);
+
+  var resendBtn = document.createElement("button");
+  resendBtn.type = "button"; resendBtn.className = "resendall"; resendBtn.hidden = true;
+  resendBtn.title = "届いていない回答を送信対象に戻す。押した後に「回答を送る」を押す";
+  resendBtn.addEventListener("click", unsendAll);
+  sendCtl.appendChild(resendBtn);
+
+  var statusEl = document.createElement("div");
+  statusEl.className = "status"; statusEl.id = "sendStatus"; statusEl.hidden = true;
+  sendCtl.appendChild(statusEl);
+
+  var fallbackEl = document.createElement("div");
+  fallbackEl.className = "fallback"; fallbackEl.id = "sendFallback"; fallbackEl.hidden = true;
+  var fbP = document.createElement("p");
+  fbP.textContent = "送れませんでした。下の本文をコピーして、このまま LINE で拓也に送ってね";
+  var fbTa = document.createElement("textarea");
+  fbTa.readOnly = true;
+  var fbCp = document.createElement("button");
+  fbCp.type = "button"; fbCp.textContent = "コピー";
+  fbCp.addEventListener("click", function(){ copyText(fbTa.value, fbCp); });
+  fallbackEl.appendChild(fbP); fallbackEl.appendChild(fbTa); fallbackEl.appendChild(fbCp);
+  sendCtl.appendChild(fallbackEl);
 
   function updateSendTop(){
     var touched = collectTouchedPending();
@@ -940,46 +1147,35 @@
 
   function renderSendbar(){
     updateSendTop();
-    var sendbar = sendCtl;  // 以下はこの中だけを作り直す
-    sendbar.innerHTML = "";
     var pairs = collectPending();
     var waiting = countSentWaiting();
 
-    var b = document.createElement("button");
-    b.type = "button"; b.className = "send";
-    b.textContent = sending ? "送信中…" : "回答を送る（" + pairs.length + "件）";
-    b.disabled = sending || !pairs.length;
-    b.addEventListener("click", sendAll);
-    sendbar.appendChild(b);
+    sendBtn.textContent = sending ? "送信中…" : "回答を送る（" + pairs.length + "件）";
+    sendBtn.disabled = sending || !pairs.length;
 
-    if (waiting && !sending) {
-      var r = document.createElement("button");
-      r.type = "button"; r.className = "resendall";
-      r.textContent = "送信済み（反映待ち）をまとめて送り直す（" + waiting + "件）";
-      r.title = "届いていない回答を送信対象に戻す。押した後に「回答を送る」を押す";
-      r.addEventListener("click", unsendAll);
-      sendbar.appendChild(r);
-    }
+    resendBtn.hidden = !(waiting && !sending);
+    resendBtn.textContent = "送信済み（反映待ち）をまとめて送り直す（" + waiting + "件）";
 
-    var status = document.createElement("div");
-    status.className = "status"; status.id = "sendStatus";
-    status.textContent = lastStatus; status.hidden = !lastStatus;
-    sendbar.appendChild(status);
+    statusEl.textContent = lastStatus; statusEl.hidden = !lastStatus;
 
-    var fb = document.createElement("div");
-    fb.className = "fallback"; fb.id = "sendFallback"; fb.hidden = !failedBodies.length;
-    if (failedBodies.length) {
-      var p = document.createElement("p");
-      p.textContent = "送れませんでした。下の本文をコピーして、このまま LINE で拓也に送ってね";
-      var ta = document.createElement("textarea");
-      ta.readOnly = true; ta.value = failedBodies.join("\n\n");
-      var cp = document.createElement("button");
-      cp.type = "button"; cp.textContent = "コピー";
-      cp.addEventListener("click", function(){ copyText(ta.value, cp); });
-      fb.appendChild(p); fb.appendChild(ta); fb.appendChild(cp);
-    }
-    sendbar.appendChild(fb);
+    fallbackEl.hidden = !failedBodies.length;
+    if (failedBodies.length) fbTa.value = failedBodies.join("\n\n");
+
+    scheduleBulkLabelUpdate();  // 送信バーの高さが変わりうる＝「この画面」の帯も動く
   }
+
+  // 送信バーの実寸に body の下余白と scroll-padding-bottom を追従させる（幅400で折り返して
+  // 3段になる等でバーが高くなっても、最後の行のカードや Enter で移った先の札がバーの下に隠れない）。
+  function updateSendbarSpace(){
+    var h = sendbar.getBoundingClientRect().height;
+    document.documentElement.style.setProperty("--sendbar-h", (h + 16) + "px");
+  }
+  if (window.ResizeObserver) {
+    new ResizeObserver(updateSendbarSpace).observe(sendbar);
+  } else {
+    window.addEventListener("resize", updateSendbarSpace);
+  }
+  updateSendbarSpace();
 
   renderSendbar();
 })();
