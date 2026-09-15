@@ -543,7 +543,9 @@
     var lines = ["queue"];
     var name = readName();
     if (name) lines.push("name: " + name);
-    pairs.forEach(function(p){ lines.push(p[0] + " " + p[1]); });
+    // 第3要素は source（`human`=人が確認/修正・`ai_unconfirmed`=AI予測のまま未確認で送信・
+    // 2026-09-15 pia-answer-source-ai-vs-human）。`box_ingest.ANSWER_LINE_RE`の任意第3群と同じ規約。
+    pairs.forEach(function(p){ lines.push(p[0] + " " + p[1] + " " + p[2]); });
     return lines.join("\n");
   }
   function splitBodies(pairs){
@@ -558,7 +560,9 @@
     var pairs = [];
     Object.keys(state).forEach(function(sha8){
       var s = state[sha8];
-      if (s.reviewed && !s.sent && !s.gone) pairs.push([sha8, s.unreadable ? "?" : s.answer]);
+      if (s.reviewed && !s.sent && !s.gone) {
+        pairs.push([sha8, s.unreadable ? "?" : s.answer, s.aiFilled ? "ai_unconfirmed" : "human"]);
+      }
     });
     return pairs;
   }
