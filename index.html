@@ -67,7 +67,9 @@
   .cell[data-state="ai"]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
   .cell[data-state="ai"] input.ans{color:var(--accent)}
   .cell[data-state="gone"]{border-style:dashed; opacity:.6}
-  .cell .sha{font-family:ui-monospace,monospace; font-size:10.5px; color:var(--ink-3)}
+  .cell .sha{display:flex; align-items:baseline; justify-content:space-between; gap:8px; font-family:ui-monospace,monospace; font-size:10.5px; color:var(--ink-3)}
+  .picked{font-family:ui-monospace,monospace; font-size:11px; color:var(--ink-3)}
+  .picked:not(:empty){color:var(--done); font-weight:600}
   .shot{background:#fff; border:1px solid var(--line); border-radius:6px; display:grid; place-items:center; padding:5px}
   .shot img{display:block; max-width:100%; width:100%; height:auto}
   .hint{
@@ -95,19 +97,6 @@
   button.skip:hover{color:var(--warn); border-color:var(--warn)}
   .cell[data-state="skip"] button.skip{color:var(--warn); border-color:var(--warn); font-weight:600}
   .gone-note{font-size:11.5px; color:var(--warn); text-align:center}
-  button.resend{
-    display:block; width:100%; font:500 10.5px/1.3 sans-serif; padding:6px 4px;
-    border:1px dashed var(--warn); border-radius:7px; background:var(--warn-soft);
-    color:var(--warn); cursor:pointer;
-  }
-  button.resend[hidden]{display:none}
-  /* 送信済み（resend が見えている）セルは画像・ヒント・入力を畳んで1行にする（流し続ける使い方で上に溜まらないように） */
-  .cell:has(button.resend:not([hidden])){opacity:.55; padding:6px 10px}
-  .cell:has(button.resend:not([hidden])) .shot,
-  .cell:has(button.resend:not([hidden])) .hint,
-  .cell:has(button.resend:not([hidden])) .boxtag,
-  .cell:has(button.resend:not([hidden])) input,
-  .cell:has(button.resend:not([hidden])) button.skip{display:none}
 
   .sendbar{
     position:fixed; left:0; right:0; bottom:0; z-index:30;
@@ -226,7 +215,12 @@
     cell.dataset.sha8 = it.sha8;
 
     var sha = document.createElement("div");
-    sha.className = "sha"; sha.textContent = it.sha8;
+    sha.className = "sha";
+    var shaLabel = document.createElement("span");
+    shaLabel.textContent = it.sha8;
+    var picked = document.createElement("span");
+    picked.className = "picked";
+    sha.appendChild(shaLabel); sha.appendChild(picked);
 
     var tag = document.createElement("div");
     tag.className = "boxtag"; tag.hidden = true;  // 表示可否とラベルは layout() が毎回設定する
@@ -256,18 +250,7 @@
     skip.type = "button"; skip.className = "skip"; skip.textContent = "読めない";
     row.appendChild(inp); row.appendChild(skip);
 
-    var resend = document.createElement("button");
-    resend.type = "button"; resend.className = "resend"; resend.hidden = true;
-    resend.textContent = "送信済み（反映待ち）・もう一度送る";
-    resend.title = "届いていないと思う場合、押すと送信対象に戻る";
-    resend.addEventListener("click", function(){
-      delete st(it.sha8).sent;
-      resend.hidden = true;
-      persist(); tally();
-    });
-
     cell.appendChild(sha); cell.appendChild(tag); cell.appendChild(shot); cell.appendChild(hint); cell.appendChild(row);
-    cell.appendChild(resend);
 
     var s = st(it.sha8);
     if (s.gone) {
@@ -280,8 +263,8 @@
       }
       inp.value = s.answer || "";
       paint(cell, s);
-      resend.hidden = !s.sent;
     }
+    updatePicked(cell, it.sha8);
 
     gbtn.addEventListener("click", function(){
       inp.value = it.ai_pred; inp.dispatchEvent(new Event("input"));
@@ -293,9 +276,10 @@
       if (v !== inp.value) inp.value = v;
       var s2 = st(it.sha8);
       delete s2.aiFilled;  // 人が編集した＝AI予測のまま扱いを外す
+      if (s2.sent) delete s2.sent;  // 送信済みを直したら送信対象に戻す（見返して直せる、の帰結。放置すると直した値が二度と送られない）
       s2.answer = v; s2.unreadable = false;
       s2.reviewed = v.length === 6;
-      paint(cell, s2); tally(); persist();
+      paint(cell, s2); updatePicked(cell, it.sha8); tally(); persist();
       if (v.length === 6) focusNext(inp);
     });
     inp.addEventListener("keydown", function(e){
@@ -314,10 +298,11 @@
     skip.addEventListener("click", function(){
       var s2 = st(it.sha8);
       delete s2.aiFilled;  // 「読めない」判断も人の操作＝AI予測のまま扱いを外す
+      if (s2.sent) delete s2.sent;  // 送信済みを直したら送信対象に戻す（inpと同じ理由）
       s2.unreadable = !s2.unreadable;
       if (s2.unreadable) { s2.answer = ""; s2.reviewed = true; inp.value = ""; }
       else { s2.reviewed = false; }
-      paint(cell, s2); tally(); persist();
+      paint(cell, s2); updatePicked(cell, it.sha8); tally(); persist();
     });
 
     return cell;
@@ -327,6 +312,22 @@
     cell.dataset.state = s.unreadable ? "skip" : (s.aiFilled ? "ai" : (s.reviewed ? "ok" : "todo"));
     var inp = cell.querySelector("input.ans");
     if (inp) inp.disabled = false;
+  }
+
+  // 「回答を選んだか」の小さな付記（2026-09-15 pia-queue-page-answered-badge）。未回答は空文字。
+  // 「＝AI」は aiFilled（未確認のプリフィル）でなく、値がAI予測と一致するかで出す
+  // （人がEnter確定等でaiFilledが外れても、AI予測どおりに送った事実は変わらないため）。
+  function pickedText(s, it){
+    if (!s || !s.reviewed) return "";
+    var isAiMatch = !!(it && it.ai_pred && s.answer === it.ai_pred);
+    var base = s.unreadable ? "読めない" : (s.answer || "") + (isAiMatch ? " ＝AI" : "");
+    var text = "✔ " + base;
+    if (s.sent) text += "・送信済";
+    return text;
+  }
+  function updatePicked(cell, sha8){
+    var el = cell.querySelector(".picked");
+    if (el) el.textContent = pickedText(state[sha8], itemBySha[sha8]);
   }
 
   function applyGoneUi(cell, it){
@@ -639,8 +640,7 @@
       var sha8 = p[0];
       st(sha8).sent = true;
       var cell = cells[sha8];
-      var resendBtn = cell && cell.querySelector(".resend");
-      if (resendBtn) resendBtn.hidden = false;
+      if (cell) updatePicked(cell, sha8);
     });
     persist();
   }
@@ -652,8 +652,7 @@
       if (!(s.sent && !s.gone)) return;
       delete s.sent;
       var cell = cells[sha8];
-      var resendBtn = cell && cell.querySelector(".resend");
-      if (resendBtn) resendBtn.hidden = true;
+      if (cell) updatePicked(cell, sha8);
     });
     persist(); tally();
   }
