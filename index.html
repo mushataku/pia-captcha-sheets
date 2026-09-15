@@ -86,25 +86,39 @@
   .shot .boxtag{left:2px}
   .shot .boxtag[hidden]{display:none}
 
-  /* 読みを画像の直下へ隙間なし・6桁を画像幅いっぱいに等間隔で広げる（2026-09-15） */
-  .ansWrap{position:relative}
-  input.ans{
-    display:block; width:100%; min-width:0; font-family:ui-monospace,monospace; font-size:19px; font-weight:600;
-    text-align:center; padding:6px 2px; color:transparent; caret-color:var(--ink);
-    background:var(--surface-2); border:1px solid var(--line); border-top:0; border-radius:0 0 7px 7px;
+  /* 読みを画像の直下へ隙間なし・6桁を画像幅いっぱいに等間隔で広げる（2026-09-15）。
+     本物の input と上に重ねる .digits は「同じ箱・同じ字送り」の宣言を共有する（2026-09-15
+     pia-queue-align-bottom-actions: 旧版は .digits だけ flex の space-evenly・input は text-align:center の
+     詰め書きで、全選択すると本物の値が6桁の真ん中に白抜きで浮き、クリックした桁と編集される桁もずれた）。
+     近似で合わせず、同じ規則を2回適用する＝選択帯・キャレット・クリック位置が表示の桁と一致する。 */
+  .ansWrap{position:relative; container-type:inline-size}
+  input.ans, .digits{
+    font-family:ui-monospace,monospace; font-size:19px; font-weight:600; line-height:normal;
+    font-variant-numeric:tabular-nums; font-kerning:none; text-align:left; white-space:pre;
+    letter-spacing:.8ch; padding:6px 2px 6px .8ch; border:1px solid transparent; border-top-width:0;
   }
-  input.ans::placeholder{color:var(--ink-3)}
+  @supports (width:1cqw){
+    /* 等間隔は letter-spacing と padding-left を同じ --gap にして作る。100cqw＝入力欄の外寸・ch＝数字1字の幅。
+       右端に数pxを残す＝末尾のキャレットで横スクロールが起きない（cqw を知らないブラウザは上の .8ch で揃う） */
+    input.ans, .digits{--gap:calc((100cqw - 6ch - 8px) / 7); letter-spacing:var(--gap); padding-left:var(--gap)}
+  }
+  input.ans{
+    display:block; width:100%; min-width:0; color:transparent; caret-color:var(--ink);
+    background:var(--surface-2); border-color:var(--line); border-radius:0 0 7px 7px;
+  }
+  /* 選択中の文字にも color:transparent を効かせる（既定の ::selection は白抜きで描く）。選択は淡い帯で分かり、
+     文字は上の .digits が描く＝状態色・diff色がそのまま読める */
+  input.ans::selection{color:transparent; background:rgba(47,109,181,.22)}
+  input.ans::placeholder{color:var(--ink-3); letter-spacing:normal}
   input.ans:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
   input.ans:disabled{opacity:.6}
   /* AIの読みの表示は入力欄1つにまとめる＝下の色付き桁がプリフィル/入力値そのものを映す。
      人が直した桁だけAIの読みと違う色にする（.diff）。実データはtransparentな本物のinputが持つ
-     （page.input_value等のテストはinputの値を見るので変わらない）。 */
+     （page.input_value等のテストはinputの値を見るので変わらない）。.digits は flex にしない＝
+     通常のブロックの中の inline テキストで、input の中の文字と同じレイアウトを同じ規則で再現する。 */
   .digits{
-    position:absolute; inset:0; z-index:1; pointer-events:none;
-    display:flex; align-items:center; justify-content:space-evenly; padding:0 4px;
-    font-family:ui-monospace,monospace; font-size:19px; font-weight:600; color:var(--ink);
+    position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden; color:var(--ink);
   }
-  .digits span{min-width:1ch; text-align:center}
   /* land前critic指摘・重大: `.cell[data-state="ok"] .digits span`等の状態別色(specificity 0,3,1)が
      `.digits span.diff`(0,2,1)に勝ち、人が直し終えた桁が一度も差分色にならなかった。
      診断色は状態色より必ず勝たせる（!important）。 */
@@ -404,6 +418,65 @@
     var i = inputs.indexOf(fromInput);
     if (i >= 0 && i + 1 < inputs.length) { inputs[i+1].focus(); inputs[i+1].select(); }
   }
+
+  // ---------- クリック/ドラッグを「表示の桁」に合わせる（2026-09-15 pia-queue-align-bottom-actions） ----------
+  // letter-spacing は字の右側にだけ付くので、ブラウザ既定の当たり判定（字の箱＝字+字間の中点）は見た目の
+  // 字の中心から半字間ぶん右へずれる（字のすぐ右を押すとキャレットがその字の左に入る）。クリックは
+  // 「指した桁を選ぶ」、ドラッグは「押した桁から離した桁まで」に置き直す＝そのまま数字を打てば指した桁が
+  // 置き換わる。位置の出所は .digits（表示そのもの）＝見えている桁と当たり判定が同じ物から導かれる。
+  function digitSlots(cell){
+    var spans = cell.querySelectorAll(".digits span");
+    var slots = [];
+    for (var i = 0; i < spans.length; i++) {
+      if (!spans[i].textContent) break;
+      var r = spans[i].getBoundingClientRect();
+      if (!r.width) break;
+      var gap = parseFloat(getComputedStyle(spans[i]).letterSpacing) || 0;
+      slots.push({center: r.left + (r.width - gap) / 2, pitch: r.width});
+    }
+    return slots;
+  }
+  function slotAt(slots, clientX){
+    var best = -1, bestDist = Infinity;
+    for (var i = 0; i < slots.length; i++) {
+      var d = Math.abs(clientX - slots[i].center);
+      if (d < bestDist) { bestDist = d; best = i; }
+    }
+    if (best < 0) return {index: -1, inside: false, right: false};
+    return {index: best, inside: bestDist <= slots[best].pitch / 2, right: clientX > slots[best].center};
+  }
+  function snapSelection(inp, x0, x1){
+    var cell = inp.closest(".cell");
+    if (!cell) return;
+    var slots = digitSlots(cell);
+    if (!slots.length || !inp.value.length) return;
+    var a = slotAt(slots, x0);
+    if (a.index < 0) return;
+    if (Math.abs(x1 - x0) < 4) {
+      // クリック: 字の無い右側の余白を押したときだけ末尾へキャレット（続きを打てる）
+      if (!a.inside && a.right && slots.length < 6) { inp.setSelectionRange(slots.length, slots.length); return; }
+      inp.setSelectionRange(a.index, a.index + 1);
+      return;
+    }
+    var b = slotAt(slots, x1);
+    var lo = Math.min(a.index, b.index), hi = Math.max(a.index, b.index);
+    inp.setSelectionRange(lo, hi + 1, x1 < x0 ? "backward" : "forward");
+  }
+  var digitPress = null;
+  main.addEventListener("mousedown", function(e){
+    var inp = (e.target && e.target.closest) ? e.target.closest("input.ans") : null;
+    // ダブルクリック（detail>=2）は既定の全選択のまま＝押し間違えたときに全部打ち直せる逃げ道を残す
+    digitPress = (inp && e.button === 0 && !inp.disabled && e.detail < 2) ? {inp: inp, x: e.clientX} : null;
+  });
+  document.addEventListener("mouseup", function(e){
+    var p = digitPress; digitPress = null;
+    if (!p) return;
+    var x1 = e.clientX;
+    // 既定の当たり判定（クリック位置へのキャレット設定）が終わってから置き直す
+    setTimeout(function(){
+      if (document.activeElement === p.inp) snapSelection(p.inp, p.x, x1);
+    }, 0);
+  });
 
   // 画面（ヘッダーの下〜ウィンドウ下端）に「全体が」見えているカードだけを対象にする
   // （2026-09-15「見えていないカードは確定しない」）。land前critic指摘・重大: 当初は1pxでも
