@@ -9,18 +9,19 @@
     --paper:#f6f7f9; --surface:#ffffff; --surface-2:#eef1f5;
     --ink:#161b22; --ink-2:#4d5766; --ink-3:#7a8494; --line:#d7dde6;
     --accent:#2f6db5; --accent-soft:#e3edf9; --done:#2c7a5b; --done-soft:#e3f2ea; --warn:#9a6a24; --warn-soft:#f7efe0;
+    --diff:#b3401f;
     --shadow:0 1px 2px rgba(22,27,34,.06),0 4px 14px rgba(22,27,34,.05);
   }
   *{box-sizing:border-box}
   body{
     background:var(--paper); color:var(--ink);
     font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI",system-ui,sans-serif;
-    line-height:1.5; margin:0; padding:0 16px 96px; max-width:1100px; margin-inline:auto;
+    line-height:1.5; margin:0; padding:0 16px 96px;
   }
   header{
     position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--paper) 92%, transparent);
     backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
-    margin-inline:-16px; padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px 18px; align-items:baseline;
+    margin-inline:-16px; padding:12px 16px; display:flex; flex-wrap:wrap; gap:6px 18px; align-items:baseline;
   }
   header h1{margin:0; font-size:17px; font-weight:700}
   header .stat{font-family:ui-monospace,"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2)}
@@ -31,6 +32,12 @@
     font:600 12px/1 sans-serif; padding:5px 10px; border-radius:7px; border:1px solid var(--accent);
     background:var(--accent-soft); color:var(--accent); cursor:pointer;
   }
+  header button.jump:disabled{opacity:.5; cursor:default}
+
+  /* 途中送信・画面ごとの一括確認（2026-09-15 pia-queue-dense-review・画面上部に固定＝ヘッダーがsticky） */
+  .actionbar{display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; flex-basis:100%; order:5}
+  .actionbar .barstatus{font-size:11.5px; color:var(--done); font-weight:600}
+  .actionbar button#bulkUndo{border-color:var(--warn); background:var(--warn-soft); color:var(--warn)}
 
   .sortbar{display:flex; gap:6px; align-items:baseline; flex-basis:100%; order:10}
   .sortbar .sortlabel{font-size:12px; color:var(--ink-3)}
@@ -40,10 +47,7 @@
   }
   .sortopt[aria-pressed="true"]{background:var(--accent-soft); border-color:var(--accent); color:var(--accent)}
 
-  .boxtag{font-family:ui-monospace,monospace; font-size:10px; color:var(--ink-3)}
-  .boxtag[hidden]{display:none}
-
-  section.box{margin-top:22px}
+  section.box{margin-top:18px}
   section.box h2{
     font-size:13px; font-weight:600; color:var(--ink-2); margin:0 0 8px;
     font-family:ui-monospace,"IBM Plex Mono",monospace;
@@ -51,52 +55,74 @@
   }
   section.box h2 .rest{color:var(--ink-3); font-weight:500}
 
-  .cells{display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+  /* 1画面の枚数を増やす: カードを小さくしauto-fillで列数を画面幅に合わせる
+     （2026-09-15 拓也「画面遷移が律速」。目安=1920×1080で18枚以上・幅400は1列で崩れない） */
+  .cells{display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
   .cell{
-    background:var(--surface); border:1px solid var(--line); border-radius:10px;
-    box-shadow:var(--shadow); padding:10px 10px 11px; display:flex; flex-direction:column; gap:8px;
+    background:var(--surface); border:1px solid var(--line); border-radius:9px;
+    box-shadow:var(--shadow); padding:6px; display:flex; flex-direction:column; gap:0;
   }
-  /* 人が確認済み＝緑地（AI予測のまま＝青枠・未入力＝白と一目で分け、どこまで答えたかを色で追える・
-     2026-09-15 拓也。旧版は枠色を少し変えて全体を .7 に薄めるだけで ai と見分けにくかった） */
   .cell[data-state="ok"]{border-color:var(--done); background:var(--done-soft)}
-  .cell[data-state="ok"] .shot{opacity:.45}
+  .cell[data-state="ok"] .shot{opacity:.5}
   .cell[data-state="ok"]:focus-within .shot{opacity:1}
-  .cell[data-state="ok"] input.ans{color:var(--done); background:var(--surface)}
+  .cell[data-state="ok"] input.ans{background:var(--surface)}
+  .cell[data-state="ok"] .digits span{color:var(--done)}
   .cell:focus-within{box-shadow:0 0 0 2px var(--accent), var(--shadow)}  /* いま打っている札 */
   .cell[data-state="skip"]{border-color:color-mix(in srgb,var(--warn) 45%,var(--line)); background:var(--warn-soft); opacity:.7}
   .cell[data-state="ai"]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
-  .cell[data-state="ai"] input.ans{color:var(--accent)}
+  .cell[data-state="ai"] .digits span{color:var(--accent)}
   .cell[data-state="gone"]{border-style:dashed; opacity:.6}
-  .cell .sha{display:flex; align-items:baseline; justify-content:space-between; gap:8px; font-family:ui-monospace,monospace; font-size:10.5px; color:var(--ink-3)}
-  .picked{font-family:ui-monospace,monospace; font-size:11px; color:var(--ink-3)}
+  .picked{font-family:ui-monospace,monospace; font-size:10.5px; color:var(--ink-3)}
   .picked:not(:empty){color:var(--done); font-weight:600}
-  .shot{background:#fff; border:1px solid var(--line); border-radius:6px; display:grid; place-items:center; padding:5px}
-  .shot img{display:block; max-width:100%; width:100%; height:auto}
-  .hint{
-    display:flex; align-items:center; gap:7px; padding:4px 7px; border-radius:7px;
-    background:var(--surface-2); border:1px solid var(--line);
+
+  /* 画像: 隅に確信度・箱タグを重ねる（見出しの「✓…＝AI」・灰色の帯は廃止・2026-09-15） */
+  .shot{position:relative; background:#fff; border:1px solid var(--line); border-radius:6px 6px 0 0; overflow:hidden; aspect-ratio:120/45}
+  .shot img{display:block; width:100%; height:100%; object-fit:contain}
+  .shot .conf, .shot .boxtag{
+    position:absolute; top:2px; font-family:ui-monospace,monospace; font-size:9px; line-height:1.5;
+    padding:1px 4px; border-radius:4px; background:rgba(255,255,255,.85); color:var(--ink-3);
   }
-  .hint button{
-    font:600 13px/1 ui-monospace,monospace; letter-spacing:.08em; background:none; border:0;
-    color:var(--ink-2); cursor:pointer; padding:2px 3px;
-  }
-  .hint button:hover{color:var(--accent)}
-  .hint .conf{font-family:ui-monospace,monospace; font-size:10.5px; color:var(--ink-3); margin-left:auto}
-  .row{display:flex; gap:6px}
+  .shot .conf{right:2px}
+  .shot .boxtag{left:2px}
+  .shot .boxtag[hidden]{display:none}
+
+  /* 読みを画像の直下へ隙間なし・6桁を画像幅いっぱいに等間隔で広げる（2026-09-15） */
+  .ansWrap{position:relative}
   input.ans{
-    flex:1; min-width:0; font-family:ui-monospace,monospace; font-size:19px; font-weight:600;
-    letter-spacing:.2em; text-align:center; padding:6px 4px; color:var(--ink);
-    background:var(--surface-2); border:1px solid var(--line); border-radius:7px;
+    display:block; width:100%; min-width:0; font-family:ui-monospace,monospace; font-size:19px; font-weight:600;
+    text-align:center; padding:6px 2px; color:transparent; caret-color:var(--ink);
+    background:var(--surface-2); border:1px solid var(--line); border-top:0; border-radius:0 0 7px 7px;
   }
+  input.ans::placeholder{color:var(--ink-3)}
   input.ans:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
   input.ans:disabled{opacity:.6}
+  /* AIの読みの表示は入力欄1つにまとめる＝下の色付き桁がプリフィル/入力値そのものを映す。
+     人が直した桁だけAIの読みと違う色にする（.diff）。実データはtransparentな本物のinputが持つ
+     （page.input_value等のテストはinputの値を見るので変わらない）。 */
+  .digits{
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+    display:flex; align-items:center; justify-content:space-evenly; padding:0 4px;
+    font-family:ui-monospace,monospace; font-size:19px; font-weight:600; color:var(--ink);
+  }
+  .digits span{min-width:1ch; text-align:center}
+  /* land前critic指摘・重大: `.cell[data-state="ok"] .digits span`等の状態別色(specificity 0,3,1)が
+     `.digits span.diff`(0,2,1)に勝ち、人が直し終えた桁が一度も差分色にならなかった。
+     診断色は状態色より必ず勝たせる（!important）。 */
+  .digits span.diff{color:var(--diff) !important}
+
+  .ctrlrow{display:flex; align-items:center; gap:5px; margin-top:5px}
   button.skip{
-    font:500 11px/1 sans-serif; padding:0 9px; border:1px solid var(--line); border-radius:7px;
+    font:500 10.5px/1 sans-serif; padding:4px 7px; border:1px solid var(--line); border-radius:6px;
     background:var(--surface); color:var(--ink-3); cursor:pointer;
   }
   button.skip:hover{color:var(--warn); border-color:var(--warn)}
   .cell[data-state="skip"] button.skip{color:var(--warn); border-color:var(--warn); font-weight:600}
-  .gone-note{font-size:11.5px; color:var(--warn); text-align:center}
+  button.revert{
+    font:500 10.5px/1 sans-serif; padding:4px 7px; border:1px solid var(--line); border-radius:6px;
+    background:var(--surface); color:var(--ink-3); cursor:pointer;
+  }
+  button.revert:hover{color:var(--accent); border-color:var(--accent)}
+  .gone-note{font-size:11px; color:var(--warn); text-align:center; margin-top:4px}
 
   .sendbar{
     position:fixed; left:0; right:0; bottom:0; z-index:30;
@@ -143,6 +169,12 @@
   <span class="stat">未確認 <b id="topCount">—</b> / 全 <b id="topTotal">—</b> 件・最終更新 <b id="topUpdated">—</b></span>
   <button type="button" class="jump" id="jumpTodo" title="並び順で最初の未確認の札の入力欄へ移る">未確認の先頭へ ▶</button>
   <a class="boxeslink" href="boxes.html">箱別シート（過去分）</a>
+  <div class="actionbar" id="actionbar">
+    <button type="button" class="jump" id="sendTop" hidden>ここまで送る（<span id="sendTopN">0</span>件）</button>
+    <button type="button" class="jump" id="bulkConfirm">この画面の残りは全部合ってる</button>
+    <button type="button" class="jump" id="bulkUndo" hidden>取り消す</button>
+    <span class="barstatus" id="actionStatus" hidden></span>
+  </div>
   <div class="sortbar" id="sortbar">
     <span class="sortlabel">並び替え:</span>
     <button type="button" class="sortopt" data-mode="conf_asc">確信度が低い順（既定）</button>
@@ -180,6 +212,11 @@
   var emptyNote = document.getElementById("emptyNote");
   var sendbar = document.getElementById("sendbar");
   var sortbar = document.getElementById("sortbar");
+  var sendTop = document.getElementById("sendTop");
+  var sendTopN = document.getElementById("sendTopN");
+  var bulkConfirmBtn = document.getElementById("bulkConfirm");
+  var bulkUndoBtn = document.getElementById("bulkUndo");
+  var actionStatus = document.getElementById("actionStatus");
 
   var state = {};       // sha8 -> {answer, unreadable, reviewed, sent, gone, aiFilled}
   var cells = {};       // sha8 -> DOM cell
@@ -207,50 +244,63 @@
   // aiFilled=true＝AI予測をプリフィルしたまま人がまだ触っていない（送信対象には入る。paint()の見た目区別用）
   function cellIsHandled(s){ return !!(s && (s.gone || (s.reviewed && !s.aiFilled))); }
 
+  // 入力欄の下に重ねる色付き桁（AIの読みと違う桁だけ色を変える＝人が直した箇所が分かる）。
+  // 本物の値はtransparentな input.ans が持つ（テストの input_value 等はそのまま通る）。
+  function syncDigits(cell, value){
+    var digitsEl = cell.querySelector(".digits");
+    if (!digitsEl) return;
+    var aiPred = cell.dataset.aiPred || "";
+    digitsEl.innerHTML = "";
+    for (var i = 0; i < 6; i++) {
+      var ch = (value || "")[i] || "";
+      var span = document.createElement("span");
+      span.textContent = ch;
+      if (ch && aiPred[i] && ch !== aiPred[i]) span.className = "diff";
+      digitsEl.appendChild(span);
+    }
+  }
+
   // ---------- セル生成 ----------
   function buildCell(it){
     var cell = document.createElement("div");
     cell.className = "cell";
     cell.dataset.state = "todo";
     cell.dataset.sha8 = it.sha8;
-
-    var sha = document.createElement("div");
-    sha.className = "sha";
-    var shaLabel = document.createElement("span");
-    shaLabel.textContent = it.sha8;
-    var picked = document.createElement("span");
-    picked.className = "picked";
-    sha.appendChild(shaLabel); sha.appendChild(picked);
-
-    var tag = document.createElement("div");
-    tag.className = "boxtag"; tag.hidden = true;  // 表示可否とラベルは layout() が毎回設定する
+    cell.dataset.aiPred = it.ai_pred || "";
+    cell.title = it.sha8 + (it.box_time ? " " + it.box_time : "");  // sha8/日時はtitle属性へ（2026-09-15 密な見直し）
 
     var shot = document.createElement("div");
     shot.className = "shot";
     var img = document.createElement("img");
     img.src = it.img; img.loading = "lazy"; img.alt = "認証文字 " + it.sha8;
-    shot.appendChild(img);
-
-    var hint = document.createElement("div");
-    hint.className = "hint";
-    var gbtn = document.createElement("button");
-    gbtn.type = "button"; gbtn.textContent = it.ai_pred;
-    gbtn.title = "AIの予測に戻す";
+    var tag = document.createElement("span");
+    tag.className = "boxtag"; tag.hidden = true;  // 表示可否とラベルは layout() が毎回設定する
     var conf = document.createElement("span");
     conf.className = "conf"; conf.textContent = Math.round((it.ai_conf || 0) * 100) + "%";
-    hint.appendChild(gbtn); hint.appendChild(conf);
+    shot.appendChild(img); shot.appendChild(tag); shot.appendChild(conf);
 
-    var row = document.createElement("div");
-    row.className = "row";
+    var ansWrap = document.createElement("div");
+    ansWrap.className = "ansWrap";
     var inp = document.createElement("input");
     inp.className = "ans"; inp.type = "text"; inp.inputMode = "numeric";
     inp.autocomplete = "off"; inp.maxLength = 6;
     inp.placeholder = "6桁";
+    var digits = document.createElement("div");
+    digits.className = "digits"; digits.setAttribute("aria-hidden", "true");
+    ansWrap.appendChild(inp); ansWrap.appendChild(digits);
+
+    var ctrlrow = document.createElement("div");
+    ctrlrow.className = "ctrlrow";
     var skip = document.createElement("button");
     skip.type = "button"; skip.className = "skip"; skip.textContent = "読めない";
-    row.appendChild(inp); row.appendChild(skip);
+    var revert = document.createElement("button");
+    revert.type = "button"; revert.className = "revert"; revert.textContent = "AIに戻す";
+    revert.title = "AIの予測に戻す";
+    var picked = document.createElement("span");
+    picked.className = "picked";
+    ctrlrow.appendChild(skip); ctrlrow.appendChild(revert); ctrlrow.appendChild(picked);
 
-    cell.appendChild(sha); cell.appendChild(tag); cell.appendChild(shot); cell.appendChild(hint); cell.appendChild(row);
+    cell.appendChild(shot); cell.appendChild(ansWrap); cell.appendChild(ctrlrow);
 
     var s = st(it.sha8);
     if (s.gone) {
@@ -264,9 +314,10 @@
       inp.value = s.answer || "";
       paint(cell, s);
     }
+    syncDigits(cell, inp.value);
     updatePicked(cell, it.sha8);
 
-    gbtn.addEventListener("click", function(){
+    revert.addEventListener("click", function(){
       inp.value = it.ai_pred; inp.dispatchEvent(new Event("input"));
       inp.focus({preventScroll:true});
     });
@@ -279,7 +330,7 @@
       if (s2.sent) delete s2.sent;  // 送信済みを直したら送信対象に戻す（見返して直せる、の帰結。放置すると直した値が二度と送られない）
       s2.answer = v; s2.unreadable = false;
       s2.reviewed = v.length === 6;
-      paint(cell, s2); updatePicked(cell, it.sha8); tally(); persist();
+      paint(cell, s2); syncDigits(cell, v); updatePicked(cell, it.sha8); tally(); persist();
       if (v.length === 6) focusNext(inp);
     });
     inp.addEventListener("keydown", function(e){
@@ -302,7 +353,7 @@
       s2.unreadable = !s2.unreadable;
       if (s2.unreadable) { s2.answer = ""; s2.reviewed = true; inp.value = ""; }
       else { s2.reviewed = false; }
-      paint(cell, s2); updatePicked(cell, it.sha8); tally(); persist();
+      paint(cell, s2); syncDigits(cell, inp.value); updatePicked(cell, it.sha8); tally(); persist();
     });
 
     return cell;
@@ -333,7 +384,7 @@
   function applyGoneUi(cell, it){
     cell.dataset.state = "gone";
     var inp = cell.querySelector("input.ans");
-    if (inp) { inp.disabled = true; inp.value = state[it.sha8].answer || ""; }
+    if (inp) { inp.disabled = true; inp.value = state[it.sha8].answer || ""; syncDigits(cell, inp.value); }
     var skipBtn = cell.querySelector("button.skip");
     if (skipBtn) skipBtn.disabled = true;
     if (!cell.querySelector(".gone-note")) {
@@ -352,6 +403,17 @@
     var inputs = visibleInputs();
     var i = inputs.indexOf(fromInput);
     if (i >= 0 && i + 1 < inputs.length) { inputs[i+1].focus(); inputs[i+1].select(); }
+  }
+
+  // 画面（ヘッダーの下〜ウィンドウ下端）に「全体が」見えているカードだけを対象にする
+  // （2026-09-15「見えていないカードは確定しない」）。land前critic指摘・重大: 当初は1pxでも
+  // 重なれば可視としていたため、下端で切れて画像が見えていない札まで確定・送信されていた。
+  function isCardVisible(cell){
+    var headerEl = document.querySelector("header");
+    var hb = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
+    var r = cell.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    return r.top >= hb && r.bottom <= vh;
   }
 
   // ---------- queue.json との突き合わせ（reconcile） ----------
@@ -577,6 +639,52 @@
     }
   });
 
+  // ---------- 画面ごとの一括確認（2026-09-15「この画面の残りは全部合ってる」） ----------
+  // いま画面に見えているAI予測のまま未確認のカードだけをまとめて確定（human）にする。
+  // 直前の一括確認だけ1回取り消せる（新しい一括確認を押すと取り消し権は上書きされる）。
+  var lastBulk = null;
+  bulkConfirmBtn.addEventListener("click", function(){
+    var targets = [];
+    Object.keys(cells).forEach(function(sha8){
+      var cell = cells[sha8];
+      if (cell.dataset.state !== "ai") return;  // 未確認(AI予測のまま)だけが対象
+      var s = state[sha8];
+      if (!s || s.sent || s.gone) return;
+      if (!isCardVisible(cell)) return;  // 見えていないカードは確定しない
+      targets.push(sha8);
+    });
+    if (!targets.length) {
+      actionStatus.textContent = "画面内に対象がありません"; actionStatus.hidden = false;
+      return;
+    }
+    targets.forEach(function(sha8){
+      var s2 = st(sha8);
+      delete s2.aiFilled;
+      s2.reviewed = true;
+      paint(cells[sha8], s2);
+      updatePicked(cells[sha8], sha8);
+    });
+    lastBulk = targets;
+    bulkUndoBtn.hidden = false;
+    bulkUndoBtn.textContent = "取り消す（" + targets.length + "件）";
+    actionStatus.textContent = targets.length + "件を確定しました"; actionStatus.hidden = false;
+    tally(); persist();
+  });
+  bulkUndoBtn.addEventListener("click", function(){
+    if (!lastBulk) return;
+    lastBulk.forEach(function(sha8){
+      var s2 = state[sha8];
+      if (!s2) return;
+      s2.aiFilled = true;
+      var cell = cells[sha8];
+      if (cell) { paint(cell, s2); updatePicked(cell, sha8); }
+    });
+    actionStatus.textContent = "取り消しました（" + lastBulk.length + "件）"; actionStatus.hidden = false;
+    lastBulk = null;
+    bulkUndoBtn.hidden = true;
+    tally(); persist();
+  });
+
   // ---------- fetch ----------
   function loadQueue(){
     fetch("queue.json?t=" + Date.now())
@@ -627,6 +735,18 @@
     });
     return pairs;
   }
+  // 途中送信（2026-09-15）: 人が触った（直した・確定した・「読めない」）カードだけを対象にする。
+  // AI予測のまま未確認のカードは含めない＝画面上部の「ここまで送る」専用の集合。
+  function collectTouchedPending(){
+    var pairs = [];
+    Object.keys(state).forEach(function(sha8){
+      var s = state[sha8];
+      if (s.reviewed && !s.aiFilled && !s.sent && !s.gone) {
+        pairs.push([sha8, s.unreadable ? "?" : s.answer, "human"]);
+      }
+    });
+    return pairs;
+  }
   function countSentWaiting(){
     var n = 0;
     Object.keys(state).forEach(function(sha8){
@@ -641,7 +761,15 @@
       st(sha8).sent = true;
       var cell = cells[sha8];
       if (cell) updatePicked(cell, sha8);
+      // land前critic指摘・中: 送信済みの札が直前の一括確認の対象に残っていると、取り消しが
+      // 「取り消せた」と表示しつつ実際は何も戻らず（サーバのhumanは残る・sentも残る）、
+      // かつaiFilledだけ復活して未確認カウントに二度と減らないゾンビ状態になっていた。
+      if (lastBulk) {
+        var idx = lastBulk.indexOf(sha8);
+        if (idx !== -1) lastBulk.splice(idx, 1);
+      }
     });
+    if (lastBulk && !lastBulk.length) { lastBulk = null; bulkUndoBtn.hidden = true; }
     persist();
   }
   function unsendAll(){
@@ -674,9 +802,8 @@
   var lastStatus = "";      // 「届きました（N件）」等・次の renderSendbar で表示
   var failedBodies = [];    // 送れなかった本文（退避パネルに出す）
 
-  function sendAll(){
+  function sendPairs(pairs){
     if (sending) return;
-    var pairs = collectPending();
     if (!pairs.length) return;
     var chunks = splitBodies(pairs);
     sending = true; lastStatus = "送信中…"; failedBodies = [];
@@ -688,6 +815,7 @@
         sending = false;
         lastStatus = delivered ? "届きました（" + delivered + "件）" : "";
         if (failedBodies.length) lastStatus = (delivered ? lastStatus + "・" : "") + "送れなかった分があります";
+        actionStatus.textContent = lastStatus; actionStatus.hidden = !lastStatus;
         tally();
         return;
       }
@@ -701,6 +829,9 @@
     }
     next();
   }
+  function sendAll(){ sendPairs(collectPending()); }
+  function sendTouched(){ sendPairs(collectTouchedPending()); }
+  sendTop.addEventListener("click", sendTouched);
 
   function copyText(text, btn){
     var done = function(){ btn.textContent = "コピーしました"; setTimeout(function(){ btn.textContent = "コピー"; }, 1500); };
@@ -727,7 +858,15 @@
   sendCtl.style.display = "contents";
   sendbar.appendChild(sendCtl);
 
+  function updateSendTop(){
+    var touched = collectTouchedPending();
+    sendTopN.textContent = touched.length;
+    sendTop.hidden = !touched.length;
+    sendTop.disabled = sending;
+  }
+
   function renderSendbar(){
+    updateSendTop();
     var sendbar = sendCtl;  // 以下はこの中だけを作り直す
     sendbar.innerHTML = "";
     var pairs = collectPending();
