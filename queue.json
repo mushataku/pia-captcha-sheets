@@ -1,686 +1,750 @@
 {
-  "generated_at": "2026-09-16T09:21:10.522498+09:00",
+  "generated_at": "2026-09-16T12:44:13.496687+09:00",
   "model": "ctc_cnn_ledger_steps6000_seed2",
   "items": [
     {
-      "sha8": "bfa04f8a",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "383606",
-      "ai_conf": 0.2949,
-      "img": "imgs/bfa04f8a.jpg"
+      "sha8": "39b425c8",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "701801",
+      "ai_conf": 0.0107,
+      "img": "imgs/39b425c8.jpg"
     },
     {
-      "sha8": "07e9591f",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "260816",
-      "ai_conf": 0.4229,
-      "img": "imgs/07e9591f.jpg"
+      "sha8": "36d5e8b9",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "497987",
+      "ai_conf": 0.0337,
+      "img": "imgs/36d5e8b9.jpg"
     },
     {
-      "sha8": "75232660",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "810005",
-      "ai_conf": 0.4343,
-      "img": "imgs/75232660.jpg"
+      "sha8": "57a20a9b",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "091700",
+      "ai_conf": 0.119,
+      "img": "imgs/57a20a9b.jpg"
     },
     {
-      "sha8": "8b6e6665",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "990587",
-      "ai_conf": 0.534,
-      "img": "imgs/8b6e6665.jpg"
+      "sha8": "131f605a",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "073414",
+      "ai_conf": 0.2781,
+      "img": "imgs/131f605a.jpg"
     },
     {
-      "sha8": "12a9757f",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "658865",
-      "ai_conf": 0.7612,
-      "img": "imgs/12a9757f.jpg"
+      "sha8": "211dfbdd",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "806246",
+      "ai_conf": 0.3919,
+      "img": "imgs/211dfbdd.jpg"
     },
     {
-      "sha8": "ea9eac51",
-      "box_id": "box3_20260914_093300+box4_20260914_094030",
-      "box_time": "2026-09-14 09:40:30",
-      "ai_pred": "667386",
-      "ai_conf": 0.9091,
-      "img": "imgs/ea9eac51.jpg"
+      "sha8": "7487534d",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "786905",
+      "ai_conf": 0.4084,
+      "img": "imgs/7487534d.jpg"
     },
     {
-      "sha8": "99690a94",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "837711",
-      "ai_conf": 0.9133,
-      "img": "imgs/99690a94.jpg"
+      "sha8": "8c0bcd9c",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "900986",
+      "ai_conf": 0.4258,
+      "img": "imgs/8c0bcd9c.jpg"
     },
     {
-      "sha8": "d1bbdad1",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "758889",
-      "ai_conf": 0.9215,
-      "img": "imgs/d1bbdad1.jpg"
+      "sha8": "78becff7",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "908840",
+      "ai_conf": 0.4406,
+      "img": "imgs/78becff7.jpg"
     },
     {
-      "sha8": "66d36366",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "586158",
-      "ai_conf": 0.9223,
-      "img": "imgs/66d36366.jpg"
+      "sha8": "9ed16f39",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "537417",
+      "ai_conf": 0.4919,
+      "img": "imgs/9ed16f39.jpg"
     },
     {
-      "sha8": "4ef91c7d",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "399896",
-      "ai_conf": 0.924,
-      "img": "imgs/4ef91c7d.jpg"
+      "sha8": "449fbf66",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "498712",
+      "ai_conf": 0.5068,
+      "img": "imgs/449fbf66.jpg"
     },
     {
-      "sha8": "52a37980",
-      "box_id": "box3_20260915_093617",
-      "box_time": "2026-09-15 09:36:17",
-      "ai_pred": "708447",
-      "ai_conf": 0.9355,
-      "img": "imgs/52a37980.jpg"
+      "sha8": "7494debc",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "340214",
+      "ai_conf": 0.5168,
+      "img": "imgs/7494debc.jpg"
     },
     {
-      "sha8": "7b5f3cb5",
-      "box_id": "box3_20260914_093300+box4_20260914_094030",
-      "box_time": "2026-09-14 09:40:30",
-      "ai_pred": "478304",
-      "ai_conf": 0.9523,
-      "img": "imgs/7b5f3cb5.jpg"
+      "sha8": "eb091de9",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "928779",
+      "ai_conf": 0.5276,
+      "img": "imgs/eb091de9.jpg"
     },
     {
-      "sha8": "98acfc4b",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "060658",
-      "ai_conf": 0.9593,
-      "img": "imgs/98acfc4b.jpg"
+      "sha8": "b513d991",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "074711",
+      "ai_conf": 0.574,
+      "img": "imgs/b513d991.jpg"
     },
     {
-      "sha8": "c368547d",
-      "box_id": "box5_20260915_101613",
-      "box_time": "2026-09-15 10:16:13",
-      "ai_pred": "774595",
-      "ai_conf": 0.9634,
-      "img": "imgs/c368547d.jpg"
+      "sha8": "e197b00d",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "694110",
+      "ai_conf": 0.6059,
+      "img": "imgs/e197b00d.jpg"
     },
     {
-      "sha8": "45c95312",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "093131",
-      "ai_conf": 0.9634,
-      "img": "imgs/45c95312.jpg"
+      "sha8": "d38a8ff0",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "465888",
+      "ai_conf": 0.6251,
+      "img": "imgs/d38a8ff0.jpg"
     },
     {
-      "sha8": "2b681fa8",
-      "box_id": "box7_20260914_103240",
-      "box_time": "2026-09-14 10:32:40",
-      "ai_pred": "666428",
-      "ai_conf": 0.9682,
-      "img": "imgs/2b681fa8.jpg"
+      "sha8": "7c0a4039",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "947846",
+      "ai_conf": 0.6496,
+      "img": "imgs/7c0a4039.jpg"
     },
     {
-      "sha8": "38d075d6",
-      "box_id": "box3_20260915_093617",
-      "box_time": "2026-09-15 09:36:17",
-      "ai_pred": "643163",
-      "ai_conf": 0.9725,
-      "img": "imgs/38d075d6.jpg"
+      "sha8": "2570c634",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "228116",
+      "ai_conf": 0.6924,
+      "img": "imgs/2570c634.jpg"
     },
     {
-      "sha8": "b305df25",
-      "box_id": "box3_20260915_093617",
-      "box_time": "2026-09-15 09:36:17",
-      "ai_pred": "672220",
-      "ai_conf": 0.9773,
-      "img": "imgs/b305df25.jpg"
+      "sha8": "ada71ea0",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "877384",
+      "ai_conf": 0.7271,
+      "img": "imgs/ada71ea0.jpg"
     },
     {
-      "sha8": "492e3905",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "086159",
-      "ai_conf": 0.9776,
-      "img": "imgs/492e3905.jpg"
+      "sha8": "7d18ad20",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "312710",
+      "ai_conf": 0.7661,
+      "img": "imgs/7d18ad20.jpg"
     },
     {
-      "sha8": "7d2903b7",
-      "box_id": "box3_20260915_093617",
-      "box_time": "2026-09-15 09:36:17",
-      "ai_pred": "467706",
-      "ai_conf": 0.9804,
-      "img": "imgs/7d2903b7.jpg"
+      "sha8": "133df50a",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "310734",
+      "ai_conf": 0.795,
+      "img": "imgs/133df50a.jpg"
     },
     {
-      "sha8": "ebc6b1c7",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "336776",
-      "ai_conf": 0.9807,
-      "img": "imgs/ebc6b1c7.jpg"
+      "sha8": "1b73b4aa",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "966565",
+      "ai_conf": 0.8199,
+      "img": "imgs/1b73b4aa.jpg"
     },
     {
-      "sha8": "35f6075c",
-      "box_id": "box2_20260914_091232",
-      "box_time": "2026-09-14 09:12:32",
-      "ai_pred": "912704",
-      "ai_conf": 0.9808,
-      "img": "imgs/35f6075c.jpg"
+      "sha8": "251b299f",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "787366",
+      "ai_conf": 0.8285,
+      "img": "imgs/251b299f.jpg"
     },
     {
-      "sha8": "c48bf559",
-      "box_id": "box6_20260914_101315",
-      "box_time": "2026-09-14 10:13:15",
-      "ai_pred": "561155",
-      "ai_conf": 0.9826,
-      "img": "imgs/c48bf559.jpg"
+      "sha8": "78806af5",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "586401",
+      "ai_conf": 0.8367,
+      "img": "imgs/78806af5.jpg"
     },
     {
-      "sha8": "17936930",
-      "box_id": "box7_20260914_103240",
-      "box_time": "2026-09-14 10:32:40",
-      "ai_pred": "094789",
-      "ai_conf": 0.9827,
-      "img": "imgs/17936930.jpg"
+      "sha8": "f06bacac",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "099077",
+      "ai_conf": 0.8622,
+      "img": "imgs/f06bacac.jpg"
     },
     {
-      "sha8": "a31ee119",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "470540",
-      "ai_conf": 0.9828,
-      "img": "imgs/a31ee119.jpg"
+      "sha8": "99c86d67",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "910417",
+      "ai_conf": 0.8701,
+      "img": "imgs/99c86d67.jpg"
     },
     {
-      "sha8": "5a91c02a",
-      "box_id": "box2_20260914_091232",
-      "box_time": "2026-09-14 09:12:32",
-      "ai_pred": "887760",
-      "ai_conf": 0.9828,
-      "img": "imgs/5a91c02a.jpg"
+      "sha8": "94081c33",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "263570",
+      "ai_conf": 0.907,
+      "img": "imgs/94081c33.jpg"
     },
     {
-      "sha8": "fa054832",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "797703",
-      "ai_conf": 0.9829,
-      "img": "imgs/fa054832.jpg"
+      "sha8": "e70f428f",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "577769",
+      "ai_conf": 0.9071,
+      "img": "imgs/e70f428f.jpg"
     },
     {
-      "sha8": "3db8ee45",
-      "box_id": "box2_20260915_091600",
-      "box_time": "2026-09-15 09:16:00",
-      "ai_pred": "823910",
-      "ai_conf": 0.9836,
-      "img": "imgs/3db8ee45.jpg"
+      "sha8": "f822d21a",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "747998",
+      "ai_conf": 0.9162,
+      "img": "imgs/f822d21a.jpg"
     },
     {
-      "sha8": "500bd24c",
-      "box_id": "box2_20260914_091232",
-      "box_time": "2026-09-14 09:12:32",
-      "ai_pred": "701883",
-      "ai_conf": 0.9842,
-      "img": "imgs/500bd24c.jpg"
+      "sha8": "d8be4a91",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "502615",
+      "ai_conf": 0.9164,
+      "img": "imgs/d8be4a91.jpg"
     },
     {
-      "sha8": "896b9dfb",
-      "box_id": "box5_20260914_095221",
-      "box_time": "2026-09-14 09:52:21",
-      "ai_pred": "384011",
-      "ai_conf": 0.9843,
-      "img": "imgs/896b9dfb.jpg"
+      "sha8": "3bddc2a3",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "617992",
+      "ai_conf": 0.9205,
+      "img": "imgs/3bddc2a3.jpg"
     },
     {
-      "sha8": "570c057d",
-      "box_id": "box2_20260914_091232",
-      "box_time": "2026-09-14 09:12:32",
-      "ai_pred": "372116",
-      "ai_conf": 0.986,
-      "img": "imgs/570c057d.jpg"
+      "sha8": "8212b86e",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "737380",
+      "ai_conf": 0.9353,
+      "img": "imgs/8212b86e.jpg"
     },
     {
-      "sha8": "53703317",
-      "box_id": "box5_20260915_101613",
-      "box_time": "2026-09-15 10:16:13",
-      "ai_pred": "837789",
-      "ai_conf": 0.9872,
-      "img": "imgs/53703317.jpg"
+      "sha8": "40733639",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "380580",
+      "ai_conf": 0.9406,
+      "img": "imgs/40733639.jpg"
     },
     {
-      "sha8": "cdca96d1",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "609699",
-      "ai_conf": 0.9881,
-      "img": "imgs/cdca96d1.jpg"
+      "sha8": "d4e6d944",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "798627",
+      "ai_conf": 0.9525,
+      "img": "imgs/d4e6d944.jpg"
     },
     {
-      "sha8": "91ce5c17",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "117742",
-      "ai_conf": 0.9892,
-      "img": "imgs/91ce5c17.jpg"
+      "sha8": "5d5e60fa",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "091661",
+      "ai_conf": 0.9532,
+      "img": "imgs/5d5e60fa.jpg"
     },
     {
-      "sha8": "b3d426ff",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "961814",
-      "ai_conf": 0.9898,
-      "img": "imgs/b3d426ff.jpg"
+      "sha8": "a0efacbb",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "157541",
+      "ai_conf": 0.9532,
+      "img": "imgs/a0efacbb.jpg"
     },
     {
-      "sha8": "7fc5bd49",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "113255",
+      "sha8": "6391b005",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "447688",
+      "ai_conf": 0.9543,
+      "img": "imgs/6391b005.jpg"
+    },
+    {
+      "sha8": "5b3844f9",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "132447",
+      "ai_conf": 0.9609,
+      "img": "imgs/5b3844f9.jpg"
+    },
+    {
+      "sha8": "4411f741",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "999548",
+      "ai_conf": 0.9638,
+      "img": "imgs/4411f741.jpg"
+    },
+    {
+      "sha8": "c42eaf9c",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "314331",
+      "ai_conf": 0.9661,
+      "img": "imgs/c42eaf9c.jpg"
+    },
+    {
+      "sha8": "5824a619",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "791161",
+      "ai_conf": 0.9668,
+      "img": "imgs/5824a619.jpg"
+    },
+    {
+      "sha8": "77cd467c",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "505839",
+      "ai_conf": 0.9705,
+      "img": "imgs/77cd467c.jpg"
+    },
+    {
+      "sha8": "7bb400bd",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "476704",
+      "ai_conf": 0.9735,
+      "img": "imgs/7bb400bd.jpg"
+    },
+    {
+      "sha8": "c3b64051",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "704529",
+      "ai_conf": 0.9766,
+      "img": "imgs/c3b64051.jpg"
+    },
+    {
+      "sha8": "a3a4890e",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "886756",
+      "ai_conf": 0.9778,
+      "img": "imgs/a3a4890e.jpg"
+    },
+    {
+      "sha8": "1cad3d24",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "619756",
+      "ai_conf": 0.9779,
+      "img": "imgs/1cad3d24.jpg"
+    },
+    {
+      "sha8": "dbfb8588",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "887817",
+      "ai_conf": 0.9785,
+      "img": "imgs/dbfb8588.jpg"
+    },
+    {
+      "sha8": "d89f6485",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "817320",
+      "ai_conf": 0.9794,
+      "img": "imgs/d89f6485.jpg"
+    },
+    {
+      "sha8": "df6cb4a0",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "829324",
+      "ai_conf": 0.9815,
+      "img": "imgs/df6cb4a0.jpg"
+    },
+    {
+      "sha8": "26466952",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "651576",
+      "ai_conf": 0.9855,
+      "img": "imgs/26466952.jpg"
+    },
+    {
+      "sha8": "78cf7909",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "763463",
+      "ai_conf": 0.9861,
+      "img": "imgs/78cf7909.jpg"
+    },
+    {
+      "sha8": "f6f672b4",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "107438",
+      "ai_conf": 0.9865,
+      "img": "imgs/f6f672b4.jpg"
+    },
+    {
+      "sha8": "9cdff106",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "469708",
+      "ai_conf": 0.9876,
+      "img": "imgs/9cdff106.jpg"
+    },
+    {
+      "sha8": "70028cc5",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "500193",
+      "ai_conf": 0.9878,
+      "img": "imgs/70028cc5.jpg"
+    },
+    {
+      "sha8": "033f2fcb",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "415094",
+      "ai_conf": 0.9883,
+      "img": "imgs/033f2fcb.jpg"
+    },
+    {
+      "sha8": "16e9033e",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "405100",
+      "ai_conf": 0.9883,
+      "img": "imgs/16e9033e.jpg"
+    },
+    {
+      "sha8": "996a204d",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "838560",
+      "ai_conf": 0.9889,
+      "img": "imgs/996a204d.jpg"
+    },
+    {
+      "sha8": "f97d7fbe",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "019331",
+      "ai_conf": 0.9899,
+      "img": "imgs/f97d7fbe.jpg"
+    },
+    {
+      "sha8": "5a2e58f0",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "373931",
+      "ai_conf": 0.9901,
+      "img": "imgs/5a2e58f0.jpg"
+    },
+    {
+      "sha8": "d0709f98",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "466052",
       "ai_conf": 0.9902,
-      "img": "imgs/7fc5bd49.jpg"
+      "img": "imgs/d0709f98.jpg"
     },
     {
-      "sha8": "12a20a58",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "033183",
+      "sha8": "d37e9751",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "426217",
       "ai_conf": 0.9904,
-      "img": "imgs/12a20a58.jpg"
+      "img": "imgs/d37e9751.jpg"
     },
     {
-      "sha8": "e8edd079",
-      "box_id": "box6_20260914_101315",
-      "box_time": "2026-09-14 10:13:15",
-      "ai_pred": "932307",
-      "ai_conf": 0.9911,
-      "img": "imgs/e8edd079.jpg"
+      "sha8": "650b8a6d",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "675237",
+      "ai_conf": 0.9907,
+      "img": "imgs/650b8a6d.jpg"
     },
     {
-      "sha8": "2ba84fb7",
-      "box_id": "box6_20260915_103509",
-      "box_time": "2026-09-15 10:35:09",
-      "ai_pred": "886580",
+      "sha8": "1b325a41",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "173234",
+      "ai_conf": 0.9916,
+      "img": "imgs/1b325a41.jpg"
+    },
+    {
+      "sha8": "500ceb41",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "165088",
+      "ai_conf": 0.9917,
+      "img": "imgs/500ceb41.jpg"
+    },
+    {
+      "sha8": "b65b3eb3",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "559491",
       "ai_conf": 0.992,
-      "img": "imgs/2ba84fb7.jpg"
+      "img": "imgs/b65b3eb3.jpg"
     },
     {
-      "sha8": "dd6cb5cf",
-      "box_id": "box6_20260914_101315",
-      "box_time": "2026-09-14 10:13:15",
-      "ai_pred": "136371",
-      "ai_conf": 0.9921,
-      "img": "imgs/dd6cb5cf.jpg"
-    },
-    {
-      "sha8": "0a852729",
-      "box_id": "box5_20260915_101613",
-      "box_time": "2026-09-15 10:16:13",
-      "ai_pred": "688114",
+      "sha8": "a8ea35bb",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "583720",
       "ai_conf": 0.9925,
-      "img": "imgs/0a852729.jpg"
+      "img": "imgs/a8ea35bb.jpg"
     },
     {
-      "sha8": "7879a44d",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "912465",
+      "sha8": "48029281",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "308190",
       "ai_conf": 0.9926,
-      "img": "imgs/7879a44d.jpg"
+      "img": "imgs/48029281.jpg"
     },
     {
-      "sha8": "d62f42a5",
-      "box_id": "box6_20260915_103509",
-      "box_time": "2026-09-15 10:35:09",
-      "ai_pred": "808761",
-      "ai_conf": 0.9929,
-      "img": "imgs/d62f42a5.jpg"
+      "sha8": "79272605",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "763977",
+      "ai_conf": 0.9927,
+      "img": "imgs/79272605.jpg"
     },
     {
-      "sha8": "1ba10c57",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "165809",
-      "ai_conf": 0.9931,
-      "img": "imgs/1ba10c57.jpg"
+      "sha8": "ed8ce32e",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "970585",
+      "ai_conf": 0.993,
+      "img": "imgs/ed8ce32e.jpg"
     },
     {
-      "sha8": "c6bed926",
-      "box_id": "box3_20260914_093300+box4_20260914_094030",
-      "box_time": "2026-09-14 09:40:30",
-      "ai_pred": "187217",
-      "ai_conf": 0.9931,
-      "img": "imgs/c6bed926.jpg"
-    },
-    {
-      "sha8": "0ecaf454",
-      "box_id": "box5_20260915_101613",
-      "box_time": "2026-09-15 10:16:13",
-      "ai_pred": "732099",
-      "ai_conf": 0.9932,
-      "img": "imgs/0ecaf454.jpg"
-    },
-    {
-      "sha8": "5f55c621",
-      "box_id": "box6_20260914_101315",
-      "box_time": "2026-09-14 10:13:15",
-      "ai_pred": "093212",
-      "ai_conf": 0.9932,
-      "img": "imgs/5f55c621.jpg"
-    },
-    {
-      "sha8": "36c73258",
-      "box_id": "box3_20260914_093300+box4_20260914_094030",
-      "box_time": "2026-09-14 09:40:30",
-      "ai_pred": "411315",
-      "ai_conf": 0.9934,
-      "img": "imgs/36c73258.jpg"
-    },
-    {
-      "sha8": "ef2db960",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "669279",
+      "sha8": "692478b3",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "726394",
       "ai_conf": 0.9936,
-      "img": "imgs/ef2db960.jpg"
+      "img": "imgs/692478b3.jpg"
     },
     {
-      "sha8": "41844015",
-      "box_id": "box6_20260914_101315",
-      "box_time": "2026-09-14 10:13:15",
-      "ai_pred": "081518",
+      "sha8": "bacb7188",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "961526",
+      "ai_conf": 0.9936,
+      "img": "imgs/bacb7188.jpg"
+    },
+    {
+      "sha8": "c5765882",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "078016",
       "ai_conf": 0.9937,
-      "img": "imgs/41844015.jpg"
+      "img": "imgs/c5765882.jpg"
     },
     {
-      "sha8": "d2c43354",
-      "box_id": "box2_20260915_091600",
-      "box_time": "2026-09-15 09:16:00",
-      "ai_pred": "549715",
-      "ai_conf": 0.9938,
-      "img": "imgs/d2c43354.jpg"
+      "sha8": "3f12a56d",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "255498",
+      "ai_conf": 0.9942,
+      "img": "imgs/3f12a56d.jpg"
     },
     {
-      "sha8": "8951e8e9",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "381708",
-      "ai_conf": 0.9939,
-      "img": "imgs/8951e8e9.jpg"
-    },
-    {
-      "sha8": "aaa1796a",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "087680",
-      "ai_conf": 0.9941,
-      "img": "imgs/aaa1796a.jpg"
-    },
-    {
-      "sha8": "8ac40ff8",
-      "box_id": "box7_20260914_103240",
-      "box_time": "2026-09-14 10:32:40",
-      "ai_pred": "639039",
-      "ai_conf": 0.9941,
-      "img": "imgs/8ac40ff8.jpg"
-    },
-    {
-      "sha8": "8581c471",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "081009",
-      "ai_conf": 0.9944,
-      "img": "imgs/8581c471.jpg"
-    },
-    {
-      "sha8": "7b2b67f8",
-      "box_id": "box2_20260915_091600",
-      "box_time": "2026-09-15 09:16:00",
-      "ai_pred": "827464",
-      "ai_conf": 0.9944,
-      "img": "imgs/7b2b67f8.jpg"
-    },
-    {
-      "sha8": "32052438",
-      "box_id": "box5_20260914_095221",
-      "box_time": "2026-09-14 09:52:21",
-      "ai_pred": "725846",
-      "ai_conf": 0.9945,
-      "img": "imgs/32052438.jpg"
-    },
-    {
-      "sha8": "d2738021",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "954643",
+      "sha8": "ec305b62",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "019309",
       "ai_conf": 0.9947,
-      "img": "imgs/d2738021.jpg"
+      "img": "imgs/ec305b62.jpg"
     },
     {
-      "sha8": "7b97ce74",
-      "box_id": "box2_20260915_091600",
-      "box_time": "2026-09-15 09:16:00",
-      "ai_pred": "855769",
+      "sha8": "0849d2df",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "290964",
       "ai_conf": 0.9948,
-      "img": "imgs/7b97ce74.jpg"
+      "img": "imgs/0849d2df.jpg"
     },
     {
-      "sha8": "97b8ac8c",
-      "box_id": "box6_20260915_103509",
-      "box_time": "2026-09-15 10:35:09",
-      "ai_pred": "710030",
+      "sha8": "1bf25d9f",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "653311",
       "ai_conf": 0.9949,
-      "img": "imgs/97b8ac8c.jpg"
+      "img": "imgs/1bf25d9f.jpg"
     },
     {
-      "sha8": "0b44af28",
-      "box_id": "box2_20260915_091600",
-      "box_time": "2026-09-15 09:16:00",
-      "ai_pred": "892168",
+      "sha8": "2f735d30",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "459649",
       "ai_conf": 0.9949,
-      "img": "imgs/0b44af28.jpg"
+      "img": "imgs/2f735d30.jpg"
     },
     {
-      "sha8": "dc0c81ca",
-      "box_id": "box5_20260914_095221",
-      "box_time": "2026-09-14 09:52:21",
-      "ai_pred": "990402",
-      "ai_conf": 0.995,
-      "img": "imgs/dc0c81ca.jpg"
+      "sha8": "fe411964",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "400282",
+      "ai_conf": 0.9951,
+      "img": "imgs/fe411964.jpg"
     },
     {
-      "sha8": "38b8d678",
-      "box_id": "box2_20260915_091600",
-      "box_time": "2026-09-15 09:16:00",
-      "ai_pred": "138498",
-      "ai_conf": 0.9952,
-      "img": "imgs/38b8d678.jpg"
-    },
-    {
-      "sha8": "1a21bab3",
-      "box_id": "box3_20260914_093300+box4_20260914_094030",
-      "box_time": "2026-09-14 09:40:30",
-      "ai_pred": "196641",
-      "ai_conf": 0.9953,
-      "img": "imgs/1a21bab3.jpg"
-    },
-    {
-      "sha8": "3cfeaabd",
-      "box_id": "box3_20260915_093617",
-      "box_time": "2026-09-15 09:36:17",
-      "ai_pred": "063091",
+      "sha8": "24e8c53f",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "118305",
       "ai_conf": 0.9954,
-      "img": "imgs/3cfeaabd.jpg"
+      "img": "imgs/24e8c53f.jpg"
     },
     {
-      "sha8": "45d7971b",
-      "box_id": "box6_20260915_103509",
-      "box_time": "2026-09-15 10:35:09",
-      "ai_pred": "663310",
+      "sha8": "4ed7bd6f",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "654644",
+      "ai_conf": 0.9955,
+      "img": "imgs/4ed7bd6f.jpg"
+    },
+    {
+      "sha8": "44625c9d",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "007197",
+      "ai_conf": 0.9955,
+      "img": "imgs/44625c9d.jpg"
+    },
+    {
+      "sha8": "daac66b5",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "973771",
+      "ai_conf": 0.9955,
+      "img": "imgs/daac66b5.jpg"
+    },
+    {
+      "sha8": "61cdc811",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "150501",
+      "ai_conf": 0.9956,
+      "img": "imgs/61cdc811.jpg"
+    },
+    {
+      "sha8": "7e0e2746",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "817294",
+      "ai_conf": 0.9957,
+      "img": "imgs/7e0e2746.jpg"
+    },
+    {
+      "sha8": "e6863faf",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "728698",
+      "ai_conf": 0.9957,
+      "img": "imgs/e6863faf.jpg"
+    },
+    {
+      "sha8": "0729f9cf",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "570951",
       "ai_conf": 0.9958,
-      "img": "imgs/45d7971b.jpg"
+      "img": "imgs/0729f9cf.jpg"
     },
     {
-      "sha8": "75b50f86",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "129899",
+      "sha8": "412ef091",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "439515",
       "ai_conf": 0.9958,
-      "img": "imgs/75b50f86.jpg"
+      "img": "imgs/412ef091.jpg"
     },
     {
-      "sha8": "dfb01873",
-      "box_id": "box3_20260915_093617",
-      "box_time": "2026-09-15 09:36:17",
-      "ai_pred": "506116",
-      "ai_conf": 0.9958,
-      "img": "imgs/dfb01873.jpg"
+      "sha8": "c7f044f8",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "823606",
+      "ai_conf": 0.9959,
+      "img": "imgs/c7f044f8.jpg"
     },
     {
-      "sha8": "51a300fb",
-      "box_id": "box3_20260915_093617",
-      "box_time": "2026-09-15 09:36:17",
-      "ai_pred": "254695",
-      "ai_conf": 0.996,
-      "img": "imgs/51a300fb.jpg"
-    },
-    {
-      "sha8": "7d344918",
-      "box_id": "box2_20260915_091600",
-      "box_time": "2026-09-15 09:16:00",
-      "ai_pred": "030791",
-      "ai_conf": 0.996,
-      "img": "imgs/7d344918.jpg"
-    },
-    {
-      "sha8": "44018ea6",
-      "box_id": "box6_20260914_101315",
-      "box_time": "2026-09-14 10:13:15",
-      "ai_pred": "324872",
-      "ai_conf": 0.996,
-      "img": "imgs/44018ea6.jpg"
-    },
-    {
-      "sha8": "61fb4ebc",
-      "box_id": "box6_20260915_103509",
-      "box_time": "2026-09-15 10:35:09",
-      "ai_pred": "666533",
+      "sha8": "811fd3c0",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "906282",
       "ai_conf": 0.9961,
-      "img": "imgs/61fb4ebc.jpg"
+      "img": "imgs/811fd3c0.jpg"
     },
     {
-      "sha8": "4cacb9f4",
-      "box_id": "box5_20260914_095221",
-      "box_time": "2026-09-14 09:52:21",
-      "ai_pred": "483676",
-      "ai_conf": 0.9961,
-      "img": "imgs/4cacb9f4.jpg"
-    },
-    {
-      "sha8": "512bc4d9",
-      "box_id": "box6_20260915_103509",
-      "box_time": "2026-09-15 10:35:09",
-      "ai_pred": "705028",
+      "sha8": "2c602b6e",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "244266",
       "ai_conf": 0.9963,
-      "img": "imgs/512bc4d9.jpg"
+      "img": "imgs/2c602b6e.jpg"
     },
     {
-      "sha8": "6f9d3f83",
-      "box_id": "box6_20260914_101315",
-      "box_time": "2026-09-14 10:13:15",
-      "ai_pred": "056060",
-      "ai_conf": 0.9964,
-      "img": "imgs/6f9d3f83.jpg"
+      "sha8": "10db4f8f",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "771296",
+      "ai_conf": 0.9963,
+      "img": "imgs/10db4f8f.jpg"
     },
     {
-      "sha8": "625d7265",
-      "box_id": "box2_20260914_091232",
-      "box_time": "2026-09-14 09:12:32",
-      "ai_pred": "983540",
-      "ai_conf": 0.9964,
-      "img": "imgs/625d7265.jpg"
-    },
-    {
-      "sha8": "2e022f7d",
-      "box_id": "box2_20260916_091534",
-      "box_time": "2026-09-16 09:15:34",
-      "ai_pred": "009168",
+      "sha8": "ecc03b15",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "206664",
       "ai_conf": 0.9965,
-      "img": "imgs/2e022f7d.jpg"
+      "img": "imgs/ecc03b15.jpg"
     },
     {
-      "sha8": "fd60b4a5",
-      "box_id": "box7_20260914_103240",
-      "box_time": "2026-09-14 10:32:40",
-      "ai_pred": "622176",
-      "ai_conf": 0.9965,
-      "img": "imgs/fd60b4a5.jpg"
+      "sha8": "01feb630",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "951298",
+      "ai_conf": 0.9966,
+      "img": "imgs/01feb630.jpg"
     },
     {
-      "sha8": "12b44d89",
-      "box_id": "box6_20260914_101315",
-      "box_time": "2026-09-14 10:13:15",
-      "ai_pred": "712114",
-      "ai_conf": 0.9965,
-      "img": "imgs/12b44d89.jpg"
-    },
-    {
-      "sha8": "b826a02b",
-      "box_id": "box2_20260914_091232",
-      "box_time": "2026-09-14 09:12:32",
-      "ai_pred": "950424",
-      "ai_conf": 0.9965,
-      "img": "imgs/b826a02b.jpg"
-    },
-    {
-      "sha8": "afceaca3",
-      "box_id": "box2_20260915_091600",
-      "box_time": "2026-09-15 09:16:00",
-      "ai_pred": "695986",
-      "ai_conf": 0.9967,
-      "img": "imgs/afceaca3.jpg"
-    },
-    {
-      "sha8": "1bc5a2c7",
-      "box_id": "box7_20260914_103240",
-      "box_time": "2026-09-14 10:32:40",
-      "ai_pred": "982109",
-      "ai_conf": 0.9967,
-      "img": "imgs/1bc5a2c7.jpg"
-    },
-    {
-      "sha8": "f4e44437",
-      "box_id": "box3_20260914_093300+box4_20260914_094030",
-      "box_time": "2026-09-14 09:40:30",
-      "ai_pred": "385949",
-      "ai_conf": 0.9967,
-      "img": "imgs/f4e44437.jpg"
-    },
-    {
-      "sha8": "477a1b55",
-      "box_id": "box5_20260915_101613",
-      "box_time": "2026-09-15 10:16:13",
-      "ai_pred": "079460",
+      "sha8": "9c3c30ed",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "970140",
       "ai_conf": 0.9968,
-      "img": "imgs/477a1b55.jpg"
-    },
-    {
-      "sha8": "6764adcf",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "974270",
-      "ai_conf": 0.9968,
-      "img": "imgs/6764adcf.jpg"
+      "img": "imgs/9c3c30ed.jpg"
     },
     {
       "sha8": "7a330753",
@@ -707,6 +771,14 @@
       "img": "imgs/d9723e23.jpg"
     },
     {
+      "sha8": "fe470495",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "557550",
+      "ai_conf": 0.997,
+      "img": "imgs/fe470495.jpg"
+    },
+    {
       "sha8": "a1095f6c",
       "box_id": "box6_20260915_103509",
       "box_time": "2026-09-15 10:35:09",
@@ -729,6 +801,14 @@
       "ai_pred": "168590",
       "ai_conf": 0.997,
       "img": "imgs/d12031ec.jpg"
+    },
+    {
+      "sha8": "6a2bc4eb",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "107843",
+      "ai_conf": 0.9971,
+      "img": "imgs/6a2bc4eb.jpg"
     },
     {
       "sha8": "a2e3bff1",
@@ -763,6 +843,14 @@
       "img": "imgs/a69d6ec5.jpg"
     },
     {
+      "sha8": "93ad84c8",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "208101",
+      "ai_conf": 0.9972,
+      "img": "imgs/93ad84c8.jpg"
+    },
+    {
       "sha8": "526705fa",
       "box_id": "box7_20260914_103240",
       "box_time": "2026-09-14 10:32:40",
@@ -777,6 +865,30 @@
       "ai_pred": "941826",
       "ai_conf": 0.9972,
       "img": "imgs/f74963fa.jpg"
+    },
+    {
+      "sha8": "a6aba186",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "818081",
+      "ai_conf": 0.9973,
+      "img": "imgs/a6aba186.jpg"
+    },
+    {
+      "sha8": "4da26eab",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "586902",
+      "ai_conf": 0.9973,
+      "img": "imgs/4da26eab.jpg"
+    },
+    {
+      "sha8": "c19a6add",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "025666",
+      "ai_conf": 0.9973,
+      "img": "imgs/c19a6add.jpg"
     },
     {
       "sha8": "33c8f4bb",
@@ -803,6 +915,22 @@
       "img": "imgs/1b5cc6ea.jpg"
     },
     {
+      "sha8": "70ca6546",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "876228",
+      "ai_conf": 0.9974,
+      "img": "imgs/70ca6546.jpg"
+    },
+    {
+      "sha8": "23f358b3",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "179773",
+      "ai_conf": 0.9974,
+      "img": "imgs/23f358b3.jpg"
+    },
+    {
       "sha8": "3b4c1340",
       "box_id": "box2_20260916_091534",
       "box_time": "2026-09-16 09:15:34",
@@ -825,6 +953,46 @@
       "ai_pred": "024125",
       "ai_conf": 0.9974,
       "img": "imgs/b1dce03c.jpg"
+    },
+    {
+      "sha8": "8c174086",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "241318",
+      "ai_conf": 0.9975,
+      "img": "imgs/8c174086.jpg"
+    },
+    {
+      "sha8": "47d76062",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "609408",
+      "ai_conf": 0.9976,
+      "img": "imgs/47d76062.jpg"
+    },
+    {
+      "sha8": "cac5abfb",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "474396",
+      "ai_conf": 0.9976,
+      "img": "imgs/cac5abfb.jpg"
+    },
+    {
+      "sha8": "b64e045d",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "763121",
+      "ai_conf": 0.9976,
+      "img": "imgs/b64e045d.jpg"
+    },
+    {
+      "sha8": "e4197422",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "127553",
+      "ai_conf": 0.9976,
+      "img": "imgs/e4197422.jpg"
     },
     {
       "sha8": "906bca51",
@@ -867,6 +1035,22 @@
       "img": "imgs/fb3a1939.jpg"
     },
     {
+      "sha8": "e11342d0",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "753707",
+      "ai_conf": 0.9977,
+      "img": "imgs/e11342d0.jpg"
+    },
+    {
+      "sha8": "4f9a3f9c",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "645468",
+      "ai_conf": 0.9977,
+      "img": "imgs/4f9a3f9c.jpg"
+    },
+    {
       "sha8": "f2941c53",
       "box_id": "box2_20260915_091600",
       "box_time": "2026-09-15 09:16:00",
@@ -891,6 +1075,14 @@
       "img": "imgs/65151bd8.jpg"
     },
     {
+      "sha8": "df81972f",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "498609",
+      "ai_conf": 0.9978,
+      "img": "imgs/df81972f.jpg"
+    },
+    {
       "sha8": "580120df",
       "box_id": "box3_20260915_093617",
       "box_time": "2026-09-15 09:36:17",
@@ -913,6 +1105,22 @@
       "ai_pred": "128175",
       "ai_conf": 0.9978,
       "img": "imgs/e650a813.jpg"
+    },
+    {
+      "sha8": "63913555",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "508496",
+      "ai_conf": 0.9979,
+      "img": "imgs/63913555.jpg"
+    },
+    {
+      "sha8": "f876e131",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "173742",
+      "ai_conf": 0.9979,
+      "img": "imgs/f876e131.jpg"
     },
     {
       "sha8": "2e02d3d1",
@@ -955,6 +1163,22 @@
       "img": "imgs/dcb6fef6.jpg"
     },
     {
+      "sha8": "dd0955dc",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "388884",
+      "ai_conf": 0.998,
+      "img": "imgs/dd0955dc.jpg"
+    },
+    {
+      "sha8": "c8fcc714",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "511873",
+      "ai_conf": 0.998,
+      "img": "imgs/c8fcc714.jpg"
+    },
+    {
       "sha8": "439df112",
       "box_id": "box7_20260914_103240",
       "box_time": "2026-09-14 10:32:40",
@@ -995,6 +1219,14 @@
       "img": "imgs/ba7d3e87.jpg"
     },
     {
+      "sha8": "bec2a489",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "623864",
+      "ai_conf": 0.9981,
+      "img": "imgs/bec2a489.jpg"
+    },
+    {
       "sha8": "96191807",
       "box_id": "box2_20260916_091534",
       "box_time": "2026-09-16 09:15:34",
@@ -1009,14 +1241,6 @@
       "ai_pred": "817733",
       "ai_conf": 0.9981,
       "img": "imgs/447f05a5.jpg"
-    },
-    {
-      "sha8": "4ca1d5ab",
-      "box_id": "box4_20260915_095532",
-      "box_time": "2026-09-15 09:55:32",
-      "ai_pred": "394179",
-      "ai_conf": 0.9981,
-      "img": "imgs/4ca1d5ab.jpg"
     },
     {
       "sha8": "4ee78f00",
@@ -1041,6 +1265,22 @@
       "ai_pred": "582718",
       "ai_conf": 0.9981,
       "img": "imgs/924194fc.jpg"
+    },
+    {
+      "sha8": "28d06215",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "082260",
+      "ai_conf": 0.9982,
+      "img": "imgs/28d06215.jpg"
+    },
+    {
+      "sha8": "8200164b",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "337812",
+      "ai_conf": 0.9982,
+      "img": "imgs/8200164b.jpg"
     },
     {
       "sha8": "39e16952",
@@ -1099,6 +1339,30 @@
       "img": "imgs/e9bcf356.jpg"
     },
     {
+      "sha8": "a7b82f78",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "251015",
+      "ai_conf": 0.9984,
+      "img": "imgs/a7b82f78.jpg"
+    },
+    {
+      "sha8": "be8f29a7",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "037229",
+      "ai_conf": 0.9984,
+      "img": "imgs/be8f29a7.jpg"
+    },
+    {
+      "sha8": "551ec0d6",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "691389",
+      "ai_conf": 0.9984,
+      "img": "imgs/551ec0d6.jpg"
+    },
+    {
       "sha8": "55993f9a",
       "box_id": "box6_20260915_103509",
       "box_time": "2026-09-15 10:35:09",
@@ -1129,6 +1393,14 @@
       "ai_pred": "439800",
       "ai_conf": 0.9984,
       "img": "imgs/0e403484.jpg"
+    },
+    {
+      "sha8": "0cd5ef49",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "910395",
+      "ai_conf": 0.9985,
+      "img": "imgs/0cd5ef49.jpg"
     },
     {
       "sha8": "3c61f5a2",
@@ -1211,6 +1483,38 @@
       "img": "imgs/514b7f00.jpg"
     },
     {
+      "sha8": "1179ab41",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "070352",
+      "ai_conf": 0.9986,
+      "img": "imgs/1179ab41.jpg"
+    },
+    {
+      "sha8": "6e6e0e2d",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "368304",
+      "ai_conf": 0.9986,
+      "img": "imgs/6e6e0e2d.jpg"
+    },
+    {
+      "sha8": "2baade7f",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "812107",
+      "ai_conf": 0.9986,
+      "img": "imgs/2baade7f.jpg"
+    },
+    {
+      "sha8": "d5879e0a",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "162581",
+      "ai_conf": 0.9986,
+      "img": "imgs/d5879e0a.jpg"
+    },
+    {
       "sha8": "1928ff4d",
       "box_id": "box2_20260916_091534",
       "box_time": "2026-09-16 09:15:34",
@@ -1283,6 +1587,14 @@
       "img": "imgs/6038672d.jpg"
     },
     {
+      "sha8": "987a550c",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "738352",
+      "ai_conf": 0.9987,
+      "img": "imgs/987a550c.jpg"
+    },
+    {
       "sha8": "7ad7d78c",
       "box_id": "box5_20260915_101613",
       "box_time": "2026-09-15 10:16:13",
@@ -1339,6 +1651,38 @@
       "img": "imgs/dc90a79b.jpg"
     },
     {
+      "sha8": "52132e42",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "643197",
+      "ai_conf": 0.9988,
+      "img": "imgs/52132e42.jpg"
+    },
+    {
+      "sha8": "6d97586d",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "994211",
+      "ai_conf": 0.9988,
+      "img": "imgs/6d97586d.jpg"
+    },
+    {
+      "sha8": "8a94a41b",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "347965",
+      "ai_conf": 0.9988,
+      "img": "imgs/8a94a41b.jpg"
+    },
+    {
+      "sha8": "00a732f1",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "916632",
+      "ai_conf": 0.9988,
+      "img": "imgs/00a732f1.jpg"
+    },
+    {
       "sha8": "a150e359",
       "box_id": "box2_20260916_091534",
       "box_time": "2026-09-16 09:15:34",
@@ -1377,6 +1721,22 @@
       "ai_pred": "095572",
       "ai_conf": 0.9988,
       "img": "imgs/0cc61d23.jpg"
+    },
+    {
+      "sha8": "5b3a4655",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "538706",
+      "ai_conf": 0.9989,
+      "img": "imgs/5b3a4655.jpg"
+    },
+    {
+      "sha8": "bdcbde38",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "048313",
+      "ai_conf": 0.9989,
+      "img": "imgs/bdcbde38.jpg"
     },
     {
       "sha8": "ad57b048",
@@ -1449,6 +1809,30 @@
       "ai_pred": "430696",
       "ai_conf": 0.9989,
       "img": "imgs/1b942393.jpg"
+    },
+    {
+      "sha8": "9d3e500c",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "543073",
+      "ai_conf": 0.999,
+      "img": "imgs/9d3e500c.jpg"
+    },
+    {
+      "sha8": "cf6d1a94",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "864631",
+      "ai_conf": 0.999,
+      "img": "imgs/cf6d1a94.jpg"
+    },
+    {
+      "sha8": "f3292402",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "764043",
+      "ai_conf": 0.999,
+      "img": "imgs/f3292402.jpg"
     },
     {
       "sha8": "09a3ac44",
@@ -1531,6 +1915,14 @@
       "img": "imgs/7741625d.jpg"
     },
     {
+      "sha8": "4836bb61",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "681864",
+      "ai_conf": 0.9991,
+      "img": "imgs/4836bb61.jpg"
+    },
+    {
       "sha8": "b185a327",
       "box_id": "box6_20260915_103509",
       "box_time": "2026-09-15 10:35:09",
@@ -1561,6 +1953,30 @@
       "ai_pred": "715439",
       "ai_conf": 0.9991,
       "img": "imgs/04460a29.jpg"
+    },
+    {
+      "sha8": "7e730bf8",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "222615",
+      "ai_conf": 0.9992,
+      "img": "imgs/7e730bf8.jpg"
+    },
+    {
+      "sha8": "8141094d",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "573373",
+      "ai_conf": 0.9992,
+      "img": "imgs/8141094d.jpg"
+    },
+    {
+      "sha8": "d51031be",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "489721",
+      "ai_conf": 0.9992,
+      "img": "imgs/d51031be.jpg"
     },
     {
       "sha8": "2953ae67",
@@ -1633,6 +2049,22 @@
       "ai_pred": "392221",
       "ai_conf": 0.9992,
       "img": "imgs/b5a29860.jpg"
+    },
+    {
+      "sha8": "9f52e567",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "670061",
+      "ai_conf": 0.9993,
+      "img": "imgs/9f52e567.jpg"
+    },
+    {
+      "sha8": "90746e1b",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "712293",
+      "ai_conf": 0.9993,
+      "img": "imgs/90746e1b.jpg"
     },
     {
       "sha8": "925db2bd",
@@ -1745,6 +2177,30 @@
       "ai_pred": "049570",
       "ai_conf": 0.9993,
       "img": "imgs/d4ab16f7.jpg"
+    },
+    {
+      "sha8": "ea38fa71",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "584849",
+      "ai_conf": 0.9994,
+      "img": "imgs/ea38fa71.jpg"
+    },
+    {
+      "sha8": "2f842388",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "142352",
+      "ai_conf": 0.9994,
+      "img": "imgs/2f842388.jpg"
+    },
+    {
+      "sha8": "b5aaa533",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "830423",
+      "ai_conf": 0.9994,
+      "img": "imgs/b5aaa533.jpg"
     },
     {
       "sha8": "bdcb3ffb",
@@ -1883,6 +2339,70 @@
       "img": "imgs/adcdb42b.jpg"
     },
     {
+      "sha8": "07e4c3f3",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "922012",
+      "ai_conf": 0.9995,
+      "img": "imgs/07e4c3f3.jpg"
+    },
+    {
+      "sha8": "4f729f30",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "808748",
+      "ai_conf": 0.9995,
+      "img": "imgs/4f729f30.jpg"
+    },
+    {
+      "sha8": "fe8740d7",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "219226",
+      "ai_conf": 0.9995,
+      "img": "imgs/fe8740d7.jpg"
+    },
+    {
+      "sha8": "19da209e",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "361489",
+      "ai_conf": 0.9995,
+      "img": "imgs/19da209e.jpg"
+    },
+    {
+      "sha8": "64e6266b",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "099665",
+      "ai_conf": 0.9995,
+      "img": "imgs/64e6266b.jpg"
+    },
+    {
+      "sha8": "2f728bcf",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "799589",
+      "ai_conf": 0.9995,
+      "img": "imgs/2f728bcf.jpg"
+    },
+    {
+      "sha8": "6b2ffa6a",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "056033",
+      "ai_conf": 0.9995,
+      "img": "imgs/6b2ffa6a.jpg"
+    },
+    {
+      "sha8": "ce933a4b",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "782245",
+      "ai_conf": 0.9995,
+      "img": "imgs/ce933a4b.jpg"
+    },
+    {
       "sha8": "296492cc",
       "box_id": "box5_20260915_101613",
       "box_time": "2026-09-15 10:16:13",
@@ -1993,6 +2513,134 @@
       "ai_pred": "986621",
       "ai_conf": 0.9995,
       "img": "imgs/dab71042.jpg"
+    },
+    {
+      "sha8": "2fcb4c42",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "284469",
+      "ai_conf": 0.9996,
+      "img": "imgs/2fcb4c42.jpg"
+    },
+    {
+      "sha8": "79a68485",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "321536",
+      "ai_conf": 0.9996,
+      "img": "imgs/79a68485.jpg"
+    },
+    {
+      "sha8": "bafa8447",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "058213",
+      "ai_conf": 0.9996,
+      "img": "imgs/bafa8447.jpg"
+    },
+    {
+      "sha8": "c621e80c",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "103772",
+      "ai_conf": 0.9996,
+      "img": "imgs/c621e80c.jpg"
+    },
+    {
+      "sha8": "d185ec71",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "888259",
+      "ai_conf": 0.9996,
+      "img": "imgs/d185ec71.jpg"
+    },
+    {
+      "sha8": "008d3cc8",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "779912",
+      "ai_conf": 0.9996,
+      "img": "imgs/008d3cc8.jpg"
+    },
+    {
+      "sha8": "6eb6fa21",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "757783",
+      "ai_conf": 0.9996,
+      "img": "imgs/6eb6fa21.jpg"
+    },
+    {
+      "sha8": "482309a9",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "910602",
+      "ai_conf": 0.9996,
+      "img": "imgs/482309a9.jpg"
+    },
+    {
+      "sha8": "68d0ecab",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "827806",
+      "ai_conf": 0.9996,
+      "img": "imgs/68d0ecab.jpg"
+    },
+    {
+      "sha8": "b6ab9dfd",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "814927",
+      "ai_conf": 0.9996,
+      "img": "imgs/b6ab9dfd.jpg"
+    },
+    {
+      "sha8": "bc577286",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "909925",
+      "ai_conf": 0.9996,
+      "img": "imgs/bc577286.jpg"
+    },
+    {
+      "sha8": "f40c12b3",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "898081",
+      "ai_conf": 0.9996,
+      "img": "imgs/f40c12b3.jpg"
+    },
+    {
+      "sha8": "3f051961",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "305613",
+      "ai_conf": 0.9996,
+      "img": "imgs/3f051961.jpg"
+    },
+    {
+      "sha8": "5434c7b1",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "818384",
+      "ai_conf": 0.9996,
+      "img": "imgs/5434c7b1.jpg"
+    },
+    {
+      "sha8": "7546ce79",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "172774",
+      "ai_conf": 0.9996,
+      "img": "imgs/7546ce79.jpg"
+    },
+    {
+      "sha8": "d5232d57",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "997979",
+      "ai_conf": 0.9996,
+      "img": "imgs/d5232d57.jpg"
     },
     {
       "sha8": "2de614db",
@@ -2211,6 +2859,62 @@
       "img": "imgs/fcb11437.jpg"
     },
     {
+      "sha8": "416b346f",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "495657",
+      "ai_conf": 0.9997,
+      "img": "imgs/416b346f.jpg"
+    },
+    {
+      "sha8": "44368d96",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "019530",
+      "ai_conf": 0.9997,
+      "img": "imgs/44368d96.jpg"
+    },
+    {
+      "sha8": "60f5ce9b",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "657594",
+      "ai_conf": 0.9997,
+      "img": "imgs/60f5ce9b.jpg"
+    },
+    {
+      "sha8": "f8772a5b",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "967985",
+      "ai_conf": 0.9997,
+      "img": "imgs/f8772a5b.jpg"
+    },
+    {
+      "sha8": "5c6a610c",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "084684",
+      "ai_conf": 0.9997,
+      "img": "imgs/5c6a610c.jpg"
+    },
+    {
+      "sha8": "c21e0159",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "446651",
+      "ai_conf": 0.9997,
+      "img": "imgs/c21e0159.jpg"
+    },
+    {
+      "sha8": "b7420ee6",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "556390",
+      "ai_conf": 0.9997,
+      "img": "imgs/b7420ee6.jpg"
+    },
+    {
       "sha8": "867f9254",
       "box_id": "box2_20260916_091534",
       "box_time": "2026-09-16 09:15:34",
@@ -2361,6 +3065,70 @@
       "ai_pred": "292868",
       "ai_conf": 0.9997,
       "img": "imgs/d512e2f6.jpg"
+    },
+    {
+      "sha8": "398623c4",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "024800",
+      "ai_conf": 0.9998,
+      "img": "imgs/398623c4.jpg"
+    },
+    {
+      "sha8": "424559e3",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "992385",
+      "ai_conf": 0.9998,
+      "img": "imgs/424559e3.jpg"
+    },
+    {
+      "sha8": "c68f06ef",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "554904",
+      "ai_conf": 0.9998,
+      "img": "imgs/c68f06ef.jpg"
+    },
+    {
+      "sha8": "ca27fcf4",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "565627",
+      "ai_conf": 0.9998,
+      "img": "imgs/ca27fcf4.jpg"
+    },
+    {
+      "sha8": "3e3e7224",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "061869",
+      "ai_conf": 0.9998,
+      "img": "imgs/3e3e7224.jpg"
+    },
+    {
+      "sha8": "b5232a55",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "587500",
+      "ai_conf": 0.9998,
+      "img": "imgs/b5232a55.jpg"
+    },
+    {
+      "sha8": "140b14fc",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "480797",
+      "ai_conf": 0.9998,
+      "img": "imgs/140b14fc.jpg"
+    },
+    {
+      "sha8": "a2e640c2",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "632186",
+      "ai_conf": 0.9998,
+      "img": "imgs/a2e640c2.jpg"
     },
     {
       "sha8": "27fdbe9b",
@@ -2521,6 +3289,78 @@
       "ai_pred": "099101",
       "ai_conf": 0.9998,
       "img": "imgs/90fe604d.jpg"
+    },
+    {
+      "sha8": "104c3e52",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "504388",
+      "ai_conf": 0.9999,
+      "img": "imgs/104c3e52.jpg"
+    },
+    {
+      "sha8": "3c5a179a",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "142529",
+      "ai_conf": 0.9999,
+      "img": "imgs/3c5a179a.jpg"
+    },
+    {
+      "sha8": "59011eae",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "214878",
+      "ai_conf": 0.9999,
+      "img": "imgs/59011eae.jpg"
+    },
+    {
+      "sha8": "bad5cd46",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "327444",
+      "ai_conf": 0.9999,
+      "img": "imgs/bad5cd46.jpg"
+    },
+    {
+      "sha8": "e688705c",
+      "box_id": "box6_20260916_103521",
+      "box_time": "2026-09-16 10:35:21",
+      "ai_pred": "805344",
+      "ai_conf": 0.9999,
+      "img": "imgs/e688705c.jpg"
+    },
+    {
+      "sha8": "3d41ccad",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "748207",
+      "ai_conf": 0.9999,
+      "img": "imgs/3d41ccad.jpg"
+    },
+    {
+      "sha8": "8476df4b",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "025409",
+      "ai_conf": 0.9999,
+      "img": "imgs/8476df4b.jpg"
+    },
+    {
+      "sha8": "b89ceb86",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "562158",
+      "ai_conf": 0.9999,
+      "img": "imgs/b89ceb86.jpg"
+    },
+    {
+      "sha8": "75e54485",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "372235",
+      "ai_conf": 0.9999,
+      "img": "imgs/75e54485.jpg"
     },
     {
       "sha8": "25a00469",
@@ -2729,6 +3569,30 @@
       "ai_pred": "266232",
       "ai_conf": 0.9999,
       "img": "imgs/429b7dbd.jpg"
+    },
+    {
+      "sha8": "eabe2408",
+      "box_id": "box5_20260916_101624",
+      "box_time": "2026-09-16 10:16:24",
+      "ai_pred": "444888",
+      "ai_conf": 1.0,
+      "img": "imgs/eabe2408.jpg"
+    },
+    {
+      "sha8": "00749fa5",
+      "box_id": "box4_20260916_095559",
+      "box_time": "2026-09-16 09:55:59",
+      "ai_pred": "134539",
+      "ai_conf": 1.0,
+      "img": "imgs/00749fa5.jpg"
+    },
+    {
+      "sha8": "98440c4a",
+      "box_id": "box3_20260916_093535",
+      "box_time": "2026-09-16 09:35:35",
+      "ai_pred": "242357",
+      "ai_conf": 1.0,
+      "img": "imgs/98440c4a.jpg"
     },
     {
       "sha8": "25ee5b05",
