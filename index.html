@@ -185,10 +185,45 @@
      ボタンの行が上下にずれ、「回答を送る」のダブルクリックの2回目が上の「見えている未確認N件は合ってる」に
      当たって、人が見ていない札を確定していた） */
   .sendbar .barstatus{font-size:12.5px; line-height:1.5; min-height:1.5em; color:var(--done); font-weight:600;
-    flex-basis:100%; text-align:center; order:1}
+    flex-basis:100%; text-align:center; order:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
   .sendbar .barstatus[hidden]{display:block; visibility:hidden}
+  /* ボタンの位置を状態で動かさない（2026-09-16 pia-queue-sendbar-no-shift）: ボタンの行は中央寄せなので、
+     ボタンが出る/消える・文言の長さが変わる（「送信中…」・件数の桁・スクロールで「見えている未確認 35件→3件」）
+     たびに行の幅が変わってボタンが左右に動き、連打の2回目が隣のボタンに当たっていた（「取り消す」の2回目が
+     「回答を送る」に当たる等）。①出し入れは枠を残して見えなくするだけ（visibility:hidden＝押せない・Tab でも
+     止まらない） ②各ボタンの幅は最長の文言（件数は4桁まで）で固定 ③数字は等幅。枠の幅は文言でなく画面幅
+     だけで決まる＝折り返しの位置も状態で変わらない。 */
+  .sendbar button[hidden]{display:inline-block; visibility:hidden}
+  .sendbar button.act, .sendbar button.send, .sendbar button.resendall{white-space:nowrap; font-variant-numeric:tabular-nums}
+  .sendbar button#sendTop{min-width:calc(12em + 34px)}        /* ここまで送る（9999件） */
+  .sendbar button#bulkConfirm{min-width:calc(16.5em + 34px)}  /* 見えている未確認 999件は合ってる */
+  .sendbar button#bulkUndo{min-width:calc(10em + 34px)}       /* 取り消す（9999件） */
+  .sendbar button.send{min-width:calc(11em + 38px)}           /* 回答を送る（9999件）／送信中… */
+  .sendbar button.resendall{min-width:calc(25em + 26px)}      /* 送信済み（反映待ち）をまとめて送り直す（9999件） */
+  /* 中くらいの幅（1920 の 150% 表示＝1280 など）は字を1段小さくして1段に収める。13px のままだと枠の合計が
+     約1264px で、めったに出ない「送り直す」の枠だけが2段目に落ち、送信バーが常に1段（約46px）高くなっていた。
+     枠の幅は em なので字と一緒に縮む（合計約1192px）。 */
+  @media (min-width: 641px) and (max-width: 1320px){
+    .sendbar{gap:8px}
+    .sendbar button.act, .sendbar button.send{font-size:12px}
+    .sendbar button.resendall{font-size:11px}
+  }
+  /* 幅が狭い（スマホ）ときは「半分の幅×2行ぶんの高さ」の枠に固定する（上の最長幅のまま並べると枠だけで5段に
+     なり、1画面のカードが減る）。文言は枠の中で折り返す＝1行でも2行でも枠の大きさは同じ。並び順は同じ。 */
+  @media (max-width: 640px){
+    .sendbar{gap:8px; padding:8px 12px}
+    .sendbar button#sendTop, .sendbar button#bulkConfirm, .sendbar button#bulkUndo,
+    .sendbar button.send, .sendbar button.resendall, .sendbar input.name{flex:0 0 calc(50% - 4px); min-width:0}
+    .sendbar button.act, .sendbar button.send, .sendbar button.resendall{
+      height:44px; padding:0 8px; font-size:12px; line-height:1.25; white-space:normal;
+    }
+    .sendbar button.resendall{font-size:11px}
+  }
+  /* 送れなかったときの退避パネルはボタンの行の上に出す（2026-09-16 pia-queue-sendbar-no-shift: 旧版は行の下に
+     出たため、下端に固定したバーが上へ伸び、ボタンの行が約165px 上へ動いた＝「回答を送る」を押し直すつもりの
+     2回目が別の場所に当たる）。上に出せばバーが伸びてもボタンの行は動かない。 */
   .fallback{
-    order:2;
+    order:-1;
     flex-basis:100%; background:var(--warn-soft); border:1px solid var(--warn); border-radius:9px;
     padding:10px; display:flex; flex-direction:column; gap:6px;
   }
