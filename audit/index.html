@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pia 台帳ラベル監査盤（out-of-fold票・層4）</title>
+<style>
+  :root{
+    --paper:#f6f7f9; --surface:#ffffff; --surface-2:#eef1f5;
+    --ink:#161b22; --ink-2:#4d5766; --ink-3:#7a8494; --line:#d7dde6;
+    --accent:#2f6db5; --accent-soft:#e3edf9; --done:#2c7a5b; --done-soft:#e3f2ea;
+    --warn:#9a6a24; --warn-soft:#f7efe0; --diff:#b3401f;
+    --shadow:0 1px 2px rgba(22,27,34,.06),0 4px 14px rgba(22,27,34,.05);
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI",system-ui,sans-serif;
+    line-height:1.5; margin:0; padding:0 16px 40px;
+  }
+  header{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+    margin-inline:-16px; padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center;
+  }
+  header h1{margin:0; font-size:16px; font-weight:700; flex-basis:100%}
+  header .stat{font-family:ui-monospace,"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2)}
+  header .stat b{color:var(--ink); font-weight:600}
+  #saveMode{font-size:11.5px; color:var(--ink-2)}
+  #saveMode[data-shared="1"]{color:var(--done); font-weight:600}
+
+  .tabbar, .togglebar{display:flex; flex-wrap:wrap; gap:6px; align-items:center; flex-basis:100%}
+  .tab, .toggle{
+    font:500 12px/1 sans-serif; padding:5px 10px; border-radius:7px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink-2); cursor:pointer;
+  }
+  .tab[aria-pressed="true"], .toggle[aria-pressed="true"]{background:var(--accent-soft); border-color:var(--accent); color:var(--accent)}
+
+  #bulkConfirm, #bulkUndo, #sendBtn{
+    font:600 12px/1 sans-serif; padding:7px 12px; border-radius:7px; border:1px solid var(--accent);
+    background:var(--accent-soft); color:var(--accent); cursor:pointer;
+  }
+  #bulkUndo{border-color:var(--warn); background:var(--warn-soft); color:var(--warn)}
+  #sendBtn{border-color:var(--done); background:var(--done-soft); color:var(--done)}
+  #sendBtn:disabled{opacity:.5; cursor:default}
+  #actionStatus{font-size:11.5px; color:var(--done); font-weight:600}
+  #sendStatus{font-size:11.5px; color:var(--ink-2); font-weight:600}
+  #sendStatus[data-state="error"]{color:var(--warn)}
+  #sendStatus[data-state="ok"]{color:var(--done)}
+  #fallback{flex-basis:100%; font-size:11.5px; color:var(--ink-2)}
+  #fallback textarea{width:100%; min-height:72px; font:11px/1.4 monospace; box-sizing:border-box}
+  .cell[data-answered="1"][data-sent="0"] .badge{color:var(--warn)}
+
+  #queue{display:grid; gap:10px; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); margin-top:14px}
+  .cell{
+    background:var(--surface); border:1px solid var(--line); border-radius:9px;
+    box-shadow:var(--shadow); padding:8px; display:flex; flex-direction:column; gap:6px;
+  }
+  .cell[hidden]{display:none}
+  .cell[data-answered="1"]{border-color:var(--done); background:var(--done-soft)}
+
+  .topline{display:flex; justify-content:space-between; align-items:baseline; font-size:10.5px; color:var(--ink-3)}
+  .topline .layerTag{color:var(--warn); font-weight:700}
+  .topline .badge{font-weight:700}
+  .cell[data-answered="1"] .badge{color:var(--done)}
+
+  .shot{background:#fff; border:1px solid var(--line); border-radius:6px; overflow:hidden; aspect-ratio:120/45}
+  .shot img{display:block; width:100%; height:100%; object-fit:contain; image-rendering:pixelated}
+  .shotZoom{margin-top:4px; background:#fff; border:1px solid var(--line); border-radius:6px; overflow:hidden}
+  .shotZoom img{display:block; width:100%; height:auto; image-rendering:pixelated}
+
+  .row{font-family:ui-monospace,monospace; font-size:12.5px; display:flex; gap:6px; align-items:baseline; flex-wrap:wrap}
+  .row .rowlabel{color:var(--ink-3); font-family:"Hiragino Kaku Gothic ProN",sans-serif; font-size:11px; min-width:5.2em}
+  .digitset{display:inline-flex; gap:1px}
+  .digitset span{min-width:1ch; text-align:center}
+  .digitset span.diff{color:var(--diff); font-weight:700}
+  .conf{color:var(--ink-3); font-size:10.5px}
+  .mechNote{font-size:11px; color:var(--ink-2); background:var(--surface-2); border-radius:6px; padding:5px 6px}
+
+  .answerRow{display:flex; gap:5px; align-items:center; flex-wrap:wrap}
+  input.ans{
+    font-family:ui-monospace,monospace; font-size:16px; font-weight:600; text-align:center;
+    width:8em; padding:5px 4px; border:1px solid var(--line); border-radius:6px; background:var(--surface-2); color:var(--ink);
+  }
+  input.ans[disabled]{opacity:.45}
+  button.fill{
+    font:500 11px/1 sans-serif; padding:5px 8px; border-radius:6px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink-2); cursor:pointer;
+  }
+  button.fill:hover{color:var(--accent); border-color:var(--accent)}
+  button:focus-visible, input:focus-visible, textarea:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+
+  .verdict{display:flex; flex-direction:column; gap:3px; font-size:11.5px; color:var(--ink-2)}
+  .verdict label{display:flex; gap:5px; align-items:center; cursor:pointer}
+
+  textarea.note{
+    width:100%; height:2.8em; font:12px/1.4 ui-monospace,monospace; border:1px solid var(--line);
+    border-radius:6px; padding:5px; background:var(--surface); color:var(--ink); resize:vertical;
+  }
+  .notelabel{font-size:10.5px; color:var(--ink-3)}
+  .empty{color:var(--ink-3); font-size:13px; margin-top:30px; text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>pia 台帳ラベル監査盤（out-of-fold票・層4）</h1>
+  <span class="stat">回答済み <b id="topCount">—</b> / 全 <b id="topTotal">—</b> 件</span>
+  <span id="saveMode">保存: この端末に自動保存（「回答を送る」で受け口へ届く）</span>
+  <div class="tabbar" id="tabbar">
+    <button type="button" class="tab" data-layer="all" aria-pressed="true">すべて</button>
+    <button type="button" class="tab" data-layer="1">層1</button>
+    <button type="button" class="tab" data-layer="2">層2</button>
+    <button type="button" class="tab" data-layer="3">層3</button>
+    <button type="button" class="tab" data-layer="4">層4</button>
+  </div>
+  <div class="togglebar" id="togglebar">
+    <button type="button" class="toggle" id="toggleUnanswered">未回答だけ</button>
+    <button type="button" id="bulkConfirm">見えている未回答を「台帳どおり」で確定</button>
+    <button type="button" id="bulkUndo" hidden>取り消す</button>
+    <button type="button" id="sendBtn">回答を送る</button>
+    <span id="sendStatus" role="status">未回答</span>
+    <span id="actionStatus"></span>
+  </div>
+  <div id="fallback" hidden>
+    送信できませんでした。下の文字を全部コピーして LINE で送ってください（この端末には残っています）。
+    <textarea id="fallbackText" readonly></textarea>
+    <button type="button" id="fallbackCopy">コピー</button>
+  </div>
+</header>
+
+<main id="queue"></main>
+<p class="empty" id="emptyNote" hidden>対象の画像がありません。</p>
+
+<script>
+(function(){
+  "use strict";
+  var LS = "pia-label-audit-v1";
+  var main = document.getElementById("queue");
+  var topCount = document.getElementById("topCount");
+  var topTotal = document.getElementById("topTotal");
+  var saveMode = document.getElementById("saveMode");
+  var tabbar = document.getElementById("tabbar");
+  var toggleUnanswered = document.getElementById("toggleUnanswered");
+  var bulkConfirmBtn = document.getElementById("bulkConfirm");
+  var bulkUndoBtn = document.getElementById("bulkUndo");
+  var sendBtn = document.getElementById("sendBtn");
+  var sendStatus = document.getElementById("sendStatus");
+  var fallback = document.getElementById("fallback");
+  var fallbackText = document.getElementById("fallbackText");
+  var fallbackCopy = document.getElementById("fallbackCopy");
+  // 回答の戻り道＝受け口 pia-answers-inbox の /audit（GitHub ログインも Claude のアカウントも要らない）。
+  // `measure/box_ingest.py` の ANSWERS_INBOX_URL と同じホスト（同じ値をテストで固定）。
+  var AUDIT_INBOX_URL = "https://pia-answers-inbox-trpn7kfx7q-an.a.run.app/audit";
+  var SENT_LS = "pia-label-audit-sent-v1";   // id -> 送信済みの署名（verdict|answer）
+  var actionStatus = document.getElementById("actionStatus");
+  var emptyNote = document.getElementById("emptyNote");
+
+  var state = {};   // id -> {answer, verdict, unreadable, modelNote, answeredAt, bulk}
+  var cells = {};   // id -> DOM cell
+  var items = [];   // data.json の items（並び順そのまま）
+  var currentLayer = "all";
+  var filterUnanswered = false;
+
+  // 全角数字（日本語入力・全角貼り付け）を半角へ
+  function toHalfWidthDigits(s){
+    return String(s).replace(/[０-９]/g, function(ch){ return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0); });
+  }
+
+  // ---------- 保存: 共有DB（Artifact の db・Claude が read_db で読み戻す）＋この端末の localStorage ----------
+  var db = null;
+  var pendingTimers = {};
+  var writeChains = {};
+
+  function localRead(){
+    try { return JSON.parse(localStorage.getItem(LS) || "{}"); } catch (e) { return {}; }
+  }
+  function localSave(){
+    try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
+  }
+  function setSaveMode(text, shared){
+    saveMode.textContent = text;
+    saveMode.dataset.shared = shared ? "1" : "0";
+  }
+  function queueWrite(id){
+    if (!db) return;
+    clearTimeout(pendingTimers[id]);
+    pendingTimers[id] = setTimeout(function(){
+      delete pendingTimers[id];
+      var s = state[id];
+      var body = s ? JSON.parse(JSON.stringify(s)) : null;
+      var ref = db.collection("answers").doc(id);
+      writeChains[id] = (writeChains[id] || Promise.resolve()).then(function(){
+        return body ? ref.set(body) : ref.delete();
+      }).catch(function(e){
+        setSaveMode("保存: 共有DBへの書き込みに失敗（" + ((e && e.code) || "不明") + "）＝この端末には残っています", false);
+      });
+    }, 500);
+  }
+  function persist(ids){
+    localSave();
+    (ids || []).forEach(queueWrite);
+    scheduleSend();
+  }
+  state = localRead();
+  var sent = {};
+  try { sent = JSON.parse(localStorage.getItem(SENT_LS) || "{}"); } catch (e) { sent = {}; }
+  function sentSave(){
+    try { localStorage.setItem(SENT_LS, JSON.stringify(sent)); } catch (e) {}
+  }
+  // 送る内容の署名。confirm は 6桁の写し（台帳値）まで含めて同一視する
+  function sigOf(s){
+    if (!s || !s.verdict) return "";
+    return s.verdict === "unreadable" ? "unreadable|" : (s.verdict + "|" + (s.answer || ""));
+  }
+  function isSent(id){
+    var s = state[id];
+    return isAnswered(s) && sent[id] === sigOf(s);
+  }
+  function st(id){ return state[id] || (state[id] = {}); }
+  // 回答済み = verdict="unreadable" か、verdict有り(confirm/wrong)で6桁埋まっている
+  function isAnswered(s){
+    if (!s || !s.verdict) return false;
+    if (s.verdict === "unreadable") return true;
+    return !!(s.answer && s.answer.length === 6);
+  }
+
+  function digitRow(guess, truth){
+    var wrap = document.createElement("span");
+    wrap.className = "digitset";
+    var g = guess || "??????";
+    for (var i = 0; i < 6; i++) {
+      var span = document.createElement("span");
+      span.textContent = g[i] || "?";
+      if (truth && g[i] && g[i] !== truth[i]) span.className = "diff";
+      wrap.appendChild(span);
+    }
+    return wrap;
+  }
+
+  function mkRow(labelText){
+    var row = document.createElement("div");
+    row.className = "row";
+    var label = document.createElement("span");
+    label.className = "rowlabel"; label.textContent = labelText;
+    row.appendChild(label);
+    return row;
+  }
+
+  function ctcMajority(it){
+    var counts = {};
+    (it.ctc_seed_guesses || []).forEach(function(g){ counts[g] = (counts[g] || 0) + 1; });
+    var best = null, bestN = -1;
+    (it.ctc_seed_guesses || []).forEach(function(g){
+      if (counts[g] > bestN) { best = g; bestN = counts[g]; }
+    });
+    return best;
+  }
+
+  function buildCell(it){
+    var cell = document.createElement("div");
+    cell.className = "cell";
+    cell.dataset.id = it.id;
+    cell.dataset.layer = it.layer;
+
+    var top = document.createElement("div");
+    top.className = "topline";
+    var left = document.createElement("span");
+    left.textContent = it.id + " ・ 組" + it.group;
+    var layerTag = document.createElement("span");
+    layerTag.className = "layerTag"; layerTag.textContent = " 層" + it.layer;
+    left.appendChild(layerTag);
+    var badge = document.createElement("span");
+    badge.className = "badge";
+    top.appendChild(left); top.appendChild(badge);
+    cell.appendChild(top);
+
+    var shot = document.createElement("div");
+    shot.className = "shot";
+    var img = document.createElement("img");
+    img.src = it.img; img.loading = "lazy"; img.alt = "認証文字 " + it.id;
+    shot.appendChild(img);
+    cell.appendChild(shot);
+
+    // 4倍以上に拡大した表示（現物は120x45pxで等倍では判別できない）
+    var zoom = document.createElement("div");
+    zoom.className = "shotZoom";
+    var zoomImg = document.createElement("img");
+    zoomImg.src = it.img; zoomImg.loading = "lazy"; zoomImg.alt = "拡大 " + it.id;
+    zoom.appendChild(zoomImg);
+    cell.appendChild(zoom);
+
+    var truthRow = mkRow("台帳:");
+    var truthVal = document.createElement("span");
+    truthVal.className = "digitset";
+    (it.truth || "").split("").forEach(function(ch){
+      var s = document.createElement("span"); s.textContent = ch; truthVal.appendChild(s);
+    });
+    truthRow.appendChild(truthVal);
+    cell.appendChild(truthRow);
+
+    (it.ctc_seed_guesses || []).forEach(function(g, i){
+      var row = mkRow("CTC seed" + i + ":");
+      row.appendChild(digitRow(g, it.truth));
+      var conf = document.createElement("span");
+      conf.className = "conf";
+      var c = (it.ctc_seed_confs || [])[i];
+      conf.textContent = typeof c === "number" ? "p_min=" + c.toFixed(2) : "";
+      row.appendChild(conf);
+      cell.appendChild(row);
+    });
+
+    var opusRow = mkRow("Opus:");
+    opusRow.appendChild(digitRow(it.opus_answer, it.truth));
+    cell.appendChild(opusRow);
+
+    if (it.four_models) {
+      ["sonnet", "fable"].forEach(function(m){
+        if (!(m in it.four_models)) return;
+        var row = mkRow(m + "(補助):");
+        row.appendChild(digitRow(it.four_models[m], it.truth));
+        cell.appendChild(row);
+      });
+    }
+
+    if (it.mech_label && it.mech_label.mech) {
+      var note = document.createElement("div");
+      note.className = "mechNote";
+      note.textContent = "機序: " + it.mech_label.mech + (it.mech_label.note ? "（" + it.mech_label.note + "）" : "");
+      cell.appendChild(note);
+    }
+
+    var answerRow = document.createElement("div");
+    answerRow.className = "answerRow";
+    var inp = document.createElement("input");
+    inp.className = "ans"; inp.type = "text"; inp.inputMode = "numeric"; inp.id = "ans-" + it.id;
+    inp.autocomplete = "off"; inp.placeholder = "6桁（未入力）";
+    answerRow.appendChild(inp);
+
+    [["truth", "台帳どおり"], ["ctc", "CTC"], ["opus", "Opus"]].forEach(function(pair){
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.className = "fill"; btn.textContent = pair[1];
+      btn.addEventListener("click", function(){
+        var v = pair[0] === "truth" ? it.truth : pair[0] === "opus" ? it.opus_answer : ctcMajority(it);
+        inp.value = v || "";
+        inp.dispatchEvent(new Event("input"));
+      });
+      answerRow.appendChild(btn);
+    });
+    cell.appendChild(answerRow);
+
+    // ①この答えで確定 ②台帳が誤りで、正しくはこれ ③読めない／一意に決まらない（受け皿）
+    var verdictBox = document.createElement("div");
+    verdictBox.className = "verdict";
+    var verdictName = "verdict-" + it.id;
+    var verdictOpts = [
+      ["confirm", "①この答えで確定"],
+      ["wrong", "②台帳が誤りで、正しくはこれ"],
+      ["unreadable", "③読めない／一意に決まらない"],
+    ];
+    var radios = {};
+    verdictOpts.forEach(function(pair){
+      var label = document.createElement("label");
+      var radio = document.createElement("input");
+      radio.type = "radio"; radio.name = verdictName; radio.value = pair[0];
+      radios[pair[0]] = radio;
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(pair[1]));
+      verdictBox.appendChild(label);
+    });
+    cell.appendChild(verdictBox);
+
+    var modelNote = document.createElement("textarea");
+    modelNote.className = "note"; modelNote.id = "mn-" + it.id; modelNote.placeholder = "注記（任意）";
+    cell.appendChild(modelNote);
+
+    function loadFromState(){
+      var s = st(it.id);
+      inp.value = s.answer || "";
+      Object.keys(radios).forEach(function(k){ radios[k].checked = (s.verdict === k); });
+      modelNote.value = s.modelNote || "";
+      inp.disabled = (s.verdict === "unreadable");
+      paint();
+    }
+    function paint(){
+      var s = st(it.id);
+      var answered = isAnswered(s);
+      cell.dataset.answered = answered ? "1" : "0";
+      var isSentNow = answered && isSent(it.id);
+      cell.dataset.sent = isSentNow ? "1" : "0";
+      badge.textContent = !answered ? "未回答" : (isSentNow ? "✔ 回答済み・送信済み" : "✔ 回答済み・未送信");
+    }
+    cell._paint = paint;
+    function save(clearBulk){
+      var s = st(it.id);
+      if (clearBulk) delete s.bulk;
+      s.answer = inp.value; s.modelNote = modelNote.value;
+      s.answeredAt = new Date().toISOString();
+      paint(); persist([it.id]); tally();
+    }
+    inp.addEventListener("beforeinput", function(e){
+      if (e.isComposing) return;
+      var data = e.data;
+      if (data == null) return;
+      var digits = toHalfWidthDigits(data).replace(/[^0-9]/g, "");
+      if (!digits) return;
+      var old = inp.value;
+      var start = inp.selectionStart, end = inp.selectionEnd;
+      var before = old.slice(0, start);
+      var after = old.slice(end);
+      if (old.length >= 6) after = after.slice(Math.min(after.length, Math.max(0, digits.length - (end - start))));
+      e.preventDefault();
+      inp.value = (before + digits + after).slice(0, 6);
+      var caret = Math.min(before.length + digits.length, inp.value.length);
+      inp.setSelectionRange(caret, caret);
+      inp.dispatchEvent(new Event("input"));
+    });
+    inp.addEventListener("compositionend", function(){
+      var v = toHalfWidthDigits(inp.value).replace(/[^0-9]/g, "").slice(0, 6);
+      if (v !== inp.value) inp.value = v;
+      inp.dispatchEvent(new Event("input"));
+    });
+    inp.addEventListener("input", function(e){
+      if (e.isComposing) return;
+      var v = toHalfWidthDigits(inp.value).replace(/[^0-9]/g, "").slice(0, 6);
+      if (v !== inp.value) inp.value = v;
+      var s = st(it.id);
+      if (v && !s.verdict) {
+        s.verdict = "confirm";
+        radios.confirm.checked = true;
+      }
+      save(true);
+    });
+    modelNote.addEventListener("input", function(){ save(true); });
+    Object.keys(radios).forEach(function(key){
+      radios[key].addEventListener("change", function(){
+        var s = st(it.id);
+        delete s.bulk;
+        s.verdict = key;
+        if (key === "unreadable") { inp.value = ""; inp.disabled = true; }
+        else { inp.disabled = false; }
+        s.answer = inp.value;
+        s.answeredAt = new Date().toISOString();
+        paint(); persist([it.id]); tally();
+      });
+    });
+
+    loadFromState();
+    cell._refresh = loadFromState;
+    return cell;
+  }
+
+  function matchesFilter(it){
+    if (currentLayer !== "all" && it.layer !== currentLayer) return false;
+    if (filterUnanswered && isAnswered(state[it.id])) return false;
+    return true;
+  }
+
+  function applyFilters(){
+    items.forEach(function(it){
+      var cell = cells[it.id];
+      if (!cell) return;
+      cell.hidden = !matchesFilter(it);
+    });
+  }
+
+  function tally(){
+    var answered = 0;
+    items.forEach(function(it){ if (isAnswered(state[it.id])) answered++; });
+    topCount.textContent = answered;
+    topTotal.textContent = items.length;
+    applyFilters();
+    renderSendStatus();
+  }
+
+  tabbar.addEventListener("click", function(e){
+    var btn = e.target.closest(".tab");
+    if (!btn) return;
+    currentLayer = btn.dataset.layer;
+    Array.prototype.forEach.call(tabbar.querySelectorAll(".tab"), function(b){
+      b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+    });
+    applyFilters();
+  });
+
+  function bindToggle(btn, setFn){
+    btn.addEventListener("click", function(){
+      var next = btn.getAttribute("aria-pressed") !== "true";
+      btn.setAttribute("aria-pressed", next ? "true" : "false");
+      setFn(next);
+      applyFilters();
+    });
+  }
+  bindToggle(toggleUnanswered, function(v){ filterUnanswered = v; });
+
+  // ---------- 画面ごとの一括確認: 見えている未回答は「台帳どおり(①確定)」で確定 ----------
+  var lastBulk = null;
+  function isCardVisible(cell){
+    var headerEl = document.querySelector("header");
+    var hb = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
+    var r = cell.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    return r.top >= hb && r.bottom <= vh && r.width > 0;
+  }
+  bulkConfirmBtn.addEventListener("click", function(){
+    var targets = [];
+    items.forEach(function(it){
+      var cell = cells[it.id];
+      if (!cell || cell.hidden) return;
+      // 既に何か verdict を選んでいるカード（②台帳が誤り、を選んだだけで数字未入力の途中状態を
+      // 含む）は対象外にする——isAnswered(未回答)だけで判定すると、②を選んだ直後の
+      // 「まだ回答済みではない」カードを一括確認が①confirm+台帳値で黙って上書きしていた
+      // （land前critic指摘・中: 台帳誤りの申告が1クリックで消える）。
+      var s = state[it.id];
+      if (s && s.verdict) return;
+      if (!isCardVisible(cell)) return;
+      targets.push(it);
+    });
+    if (!targets.length) {
+      actionStatus.textContent = "画面内に対象がありません";
+      return;
+    }
+    targets.forEach(function(it){
+      var s = st(it.id);
+      s.answer = it.truth; s.verdict = "confirm";
+      s.answeredAt = new Date().toISOString(); s.bulk = true;
+      cells[it.id]._refresh();
+    });
+    lastBulk = targets.map(function(it){ return it.id; });
+    bulkUndoBtn.hidden = false;
+    actionStatus.textContent = targets.length + "件を確定しました";
+    persist(lastBulk.slice()); tally();
+  });
+  bulkUndoBtn.addEventListener("click", function(){
+    if (!lastBulk) return;
+    var undone = [];
+    lastBulk.forEach(function(id){
+      var s = state[id];
+      if (s && s.bulk) { delete state[id]; undone.push(id); if (cells[id]) cells[id]._refresh(); }
+    });
+    actionStatus.textContent = "取り消しました（" + undone.length + "件）";
+    lastBulk = null; bulkUndoBtn.hidden = true;
+    persist(undone); tally();
+  });
+
+  // ---------- 送信: 回答を受け口へ POST（ダウンロードは使わない＝Artifact のビューアは許可しない） ----------
+  // 本文は text/plain（simple request＝CORS 事前確認なし）: 1行目 audit／以降 `id verdict [6桁]`。
+  // 毎回「いま回答済みの全部」を送る（受け口も取り込みも同じ id は新しい方が勝つ）。
+  var sendTimer = null, sending = false, sendAgain = false, lastError = "";
+  function answeredIds(){
+    return items.filter(function(it){ return isAnswered(state[it.id]); }).map(function(it){ return it.id; });
+  }
+  function pendingIds(){
+    return answeredIds().filter(function(id){ return !isSent(id); });
+  }
+  function buildBody(){
+    var lines = ["audit"];
+    items.forEach(function(it){
+      var s = state[it.id];
+      if (!isAnswered(s)) return;
+      lines.push(s.verdict === "unreadable" ? (it.id + " unreadable") : (it.id + " " + s.verdict + " " + s.answer));
+    });
+    return lines.join("\n") + "\n";
+  }
+  function renderSendStatus(){
+    var total = answeredIds().length, pending = pendingIds().length;
+    var text, state_ = "";
+    if (sending) text = "送信中…";
+    else if (lastError) { text = "送信できませんでした: " + lastError + "（未送信 " + pending + "件）"; state_ = "error"; }
+    else if (!total) text = "回答するとここに送信の状態が出ます";
+    else if (!pending) { text = "✔ 全部送信済み（" + total + "件）"; state_ = "ok"; }
+    else text = "未送信 " + pending + "件（自動で送ります／「回答を送る」でも送れます）";
+    sendStatus.textContent = text;
+    sendStatus.dataset.state = state_;
+    sendBtn.disabled = sending || !pending;
+  }
+  function repaintCards(){
+    items.forEach(function(it){ var c = cells[it.id]; if (c && c._paint) c._paint(); });
+  }
+  function scheduleSend(){
+    clearTimeout(sendTimer);
+    sendTimer = setTimeout(sendNow, 2500);
+  }
+  function sendNow(){
+    clearTimeout(sendTimer);
+    if (sending) { sendAgain = true; return; }
+    if (!pendingIds().length) { renderSendStatus(); return; }
+    var ids = answeredIds();
+    var sigs = {};
+    ids.forEach(function(id){ sigs[id] = sigOf(state[id]); });
+    var body = buildBody();
+    sending = true; lastError = ""; renderSendStatus();
+    var ctl = (typeof AbortController === "function") ? new AbortController() : null;
+    var timer = ctl ? setTimeout(function(){ ctl.abort(); }, 15000) : null;
+    fetch(AUDIT_INBOX_URL, {
+      method: "POST", headers: {"Content-Type": "text/plain;charset=UTF-8"}, body: body,
+      signal: ctl ? ctl.signal : undefined
+    }).then(function(r){
+      return r.json().catch(function(){ return null; }).then(function(j){ return {status: r.status, json: j}; });
+    }).then(function(res){
+      if (res.status === 200 && res.json && res.json.ok) {
+        ids.forEach(function(id){ sent[id] = sigs[id]; });
+        sentSave();
+        fallback.hidden = true;
+      } else {
+        lastError = (res.json && res.json.error) ? res.json.error : ("HTTP " + res.status);
+        fallbackText.value = body; fallback.hidden = false;
+      }
+    }).catch(function(e){
+      lastError = (e && e.name === "AbortError") ? "時間切れ" : "通信できません";
+      fallbackText.value = body; fallback.hidden = false;
+    }).then(function(){
+      if (timer) clearTimeout(timer);
+      sending = false;
+      repaintCards(); renderSendStatus();
+      if (sendAgain) { sendAgain = false; scheduleSend(); }
+    });
+  }
+  sendBtn.addEventListener("click", sendNow);
+  fallbackCopy.addEventListener("click", function(){
+    fallbackText.focus(); fallbackText.select();
+    var done = false;
+    try { done = document.execCommand("copy"); } catch (e) { done = false; }
+    actionStatus.textContent = done ? "コピーしました" : "選択しました（長押し→コピーしてください）";
+  });
+
+  // ---------- 共有DBにつなぐ（Artifact で開いたときだけ。ローカルでは null のまま） ----------
+  function connectDb(){
+    var usePromise = (window.claude && typeof window.claude.use === "function")
+      ? window.claude.use("db").catch(function(){ return null; })
+      : Promise.resolve(null);
+    usePromise.then(function(d){
+      if (!d) return;
+      db = d;
+      // 二重化（Artifact の共有DBにも書く）。★読み戻しの正本は受け口＝「回答を送る」の側
+      setSaveMode("保存: この端末＋共有DB（正本は「回答を送る」で受け口へ）", false);
+      var first = true;
+      db.collection("answers").onSnapshot(function(snap){
+        var seen = {};
+        snap.docChanges().forEach(function(ch){
+          var id = ch.doc.id;
+          seen[id] = true;
+          if (pendingTimers[id]) return;
+          if (ch.doc.metadata && ch.doc.metadata.hasPendingWrites) return;
+          var cell = cells[id];
+          if (cell && cell.contains(document.activeElement)) return;
+          if (ch.type === "removed") delete state[id];
+          else state[id] = JSON.parse(JSON.stringify(ch.doc.data() || {}));
+          if (cell) cell._refresh();
+        });
+        if (first) {
+          first = false;
+          Object.keys(state).forEach(function(id){ if (!seen[id] && cells[id]) queueWrite(id); });
+        }
+        localSave(); tally();
+      }, function(e){
+        db = null;
+        setSaveMode("保存: この端末に自動保存（共有DBは切れました: " + ((e && e.code) || "不明") + "・送信には影響しません）", false);
+      });
+    });
+  }
+
+  // ---------- 読み込み ----------
+  fetch("data.json?t=" + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      items = data.items || [];
+      items.forEach(function(it){
+        var cell = buildCell(it);
+        cells[it.id] = cell;
+        main.appendChild(cell);
+      });
+      emptyNote.hidden = !!items.length;
+      tally();
+      connectDb();
+    });
+})();
+</script>
+</body>
+</html>

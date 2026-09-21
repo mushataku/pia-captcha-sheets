@@ -1,0 +1,799 @@
+{
+  "generated_at": "2026-09-16T12:36:44.996465+09:00",
+  "items": [
+    {
+      "id": "723b3d65",
+      "img": "img/723b3d65.png",
+      "box": "box1_091021",
+      "group": "b",
+      "truth": "922707",
+      "ctc_seed_guesses": [
+        "942707",
+        "942707",
+        "942707"
+      ],
+      "ctc_seed_confs": [
+        0.9945,
+        0.9938,
+        0.9956
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "942707",
+      "four_models": {
+        "sonnet": "912707",
+        "fable": "912707"
+      },
+      "mech_label": {
+        "mech": "frame_clip",
+        "note": "枠に刺さって切れる",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "1",
+      "confidence": 0.9938
+    },
+    {
+      "id": "b07d0398",
+      "img": "img/b07d0398.png",
+      "box": "box2_0911",
+      "group": "a",
+      "truth": "735048",
+      "ctc_seed_guesses": [
+        "135048",
+        "135048",
+        "135048"
+      ],
+      "ctc_seed_confs": [
+        0.9975,
+        0.9971,
+        0.9919
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "135048",
+      "four_models": {
+        "sonnet": "735048",
+        "fable": "735048"
+      },
+      "mech_label": {
+        "mech": "frame_clip",
+        "note": "枠に刺さって切れる",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "1",
+      "confidence": 0.9919
+    },
+    {
+      "id": "07baeaca",
+      "img": "img/07baeaca.png",
+      "box": "pia_box_20260913_1030",
+      "group": "c",
+      "truth": "971319",
+      "ctc_seed_guesses": [
+        "971019",
+        "971019",
+        "971019"
+      ],
+      "ctc_seed_confs": [
+        0.9359,
+        0.9804,
+        0.9885
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "971019",
+      "four_models": {
+        "sonnet": "971?19",
+        "fable": "971?19"
+      },
+      "mech_label": {
+        "mech": "frame_clip",
+        "note": "枠に刺さって切れる",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "1",
+      "confidence": 0.9359
+    },
+    {
+      "id": "6cdd260c",
+      "img": "img/6cdd260c.png",
+      "box": "box4_101017",
+      "group": "b",
+      "truth": "997839",
+      "ctc_seed_guesses": [
+        "997039",
+        "997039",
+        "997039"
+      ],
+      "ctc_seed_confs": [
+        0.8687,
+        0.9558,
+        0.706
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "997039",
+      "four_models": {
+        "sonnet": "997?39",
+        "fable": "997839"
+      },
+      "mech_label": {
+        "mech": "frame_clip",
+        "note": "枠に刺さって切れる",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "1",
+      "confidence": 0.706
+    },
+    {
+      "id": "ebc95c1b",
+      "img": "img/ebc95c1b.png",
+      "box": "box4_101017",
+      "group": "b",
+      "truth": "003429",
+      "ctc_seed_guesses": [
+        "008429",
+        "008429",
+        "008429"
+      ],
+      "ctc_seed_confs": [
+        0.9969,
+        0.979,
+        0.9969
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "068429",
+      "four_models": {
+        "sonnet": "068429",
+        "fable": "008429"
+      },
+      "mech_label": {
+        "mech": "overlap",
+        "note": "数字どうしの重なり",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.979
+    },
+    {
+      "id": "bd0479be",
+      "img": "img/bd0479be.png",
+      "box": "pia_box_20260913_1030",
+      "group": "c",
+      "truth": "069719",
+      "ctc_seed_guesses": [
+        "009719",
+        "009719",
+        "009719"
+      ],
+      "ctc_seed_confs": [
+        0.8425,
+        0.9821,
+        0.9396
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "069719",
+      "four_models": {
+        "sonnet": "069719",
+        "fable": "009719"
+      },
+      "mech_label": {
+        "mech": "unlabeled",
+        "note": null,
+        "source": "unlabeled_2026-09-16"
+      },
+      "layer": "2",
+      "confidence": 0.8425
+    },
+    {
+      "id": "cac00cd3",
+      "img": "img/cac00cd3.png",
+      "box": "box2_0911",
+      "group": "a",
+      "truth": "321760",
+      "ctc_seed_guesses": [
+        "321769",
+        "321769",
+        "321769"
+      ],
+      "ctc_seed_confs": [
+        0.805,
+        0.6705,
+        0.8492
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "321760",
+      "four_models": {
+        "sonnet": "321760",
+        "fable": "321760"
+      },
+      "mech_label": {
+        "mech": "unexplained",
+        "note": "高確信で外す・機序不明",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.6705
+    },
+    {
+      "id": "4f4ad9ac",
+      "img": "img/4f4ad9ac.png",
+      "box": "pia_box_20260913_1030",
+      "group": "c",
+      "truth": "617274",
+      "ctc_seed_guesses": [
+        "617277",
+        "617277",
+        "617277"
+      ],
+      "ctc_seed_confs": [
+        0.617,
+        0.6054,
+        0.7358
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "617274",
+      "four_models": null,
+      "mech_label": {
+        "mech": "frame_clip",
+        "note": "枠に刺さって切れる",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.6054
+    },
+    {
+      "id": "48f19851",
+      "img": "img/48f19851.png",
+      "box": "box1_091021",
+      "group": "b",
+      "truth": "704100",
+      "ctc_seed_guesses": [
+        "104100",
+        "104100",
+        "104100"
+      ],
+      "ctc_seed_confs": [
+        0.9104,
+        0.7126,
+        0.5978
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "704100",
+      "four_models": null,
+      "mech_label": {
+        "mech": "frame_clip",
+        "note": "枠に刺さって切れる",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.5978
+    },
+    {
+      "id": "d9fff9d2",
+      "img": "img/d9fff9d2.png",
+      "box": "pia_box_20260913_1030",
+      "group": "c",
+      "truth": "226779",
+      "ctc_seed_guesses": [
+        "226179",
+        "226179",
+        "226179"
+      ],
+      "ctc_seed_confs": [
+        0.6003,
+        0.7846,
+        0.5747
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "226719",
+      "four_models": {
+        "sonnet": "226719",
+        "fable": "226719"
+      },
+      "mech_label": {
+        "mech": "overlap",
+        "note": "数字どうしの重なり",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.5747
+    },
+    {
+      "id": "37f2cd23",
+      "img": "img/37f2cd23.png",
+      "box": "box4_101017",
+      "group": "b",
+      "truth": "510867",
+      "ctc_seed_guesses": [
+        "510887",
+        "510887",
+        "510887"
+      ],
+      "ctc_seed_confs": [
+        0.5519,
+        0.5573,
+        0.7261
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "510861",
+      "four_models": {
+        "sonnet": "510867",
+        "fable": "510867"
+      },
+      "mech_label": {
+        "mech": "overlap",
+        "note": "数字どうしの重なり",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.5519
+    },
+    {
+      "id": "c173b862",
+      "img": "img/c173b862.png",
+      "box": "box3_095014",
+      "group": "a",
+      "truth": "678669",
+      "ctc_seed_guesses": [
+        "078669",
+        "078669",
+        "078669"
+      ],
+      "ctc_seed_confs": [
+        0.55,
+        0.261,
+        0.7868
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "678669",
+      "four_models": {
+        "sonnet": "078669",
+        "fable": "078669"
+      },
+      "mech_label": {
+        "mech": "frame_clip",
+        "note": "枠に刺さって切れる",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.261
+    },
+    {
+      "id": "ec3814c9",
+      "img": "img/ec3814c9.png",
+      "box": "box4_101017",
+      "group": "b",
+      "truth": "293240",
+      "ctc_seed_guesses": [
+        "298240",
+        "298240",
+        "298240"
+      ],
+      "ctc_seed_confs": [
+        0.5215,
+        0.1772,
+        0.1808
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "293240",
+      "four_models": {
+        "sonnet": "263240",
+        "fable": "29?240"
+      },
+      "mech_label": {
+        "mech": "overlap",
+        "note": "数字どうしの重なり",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.1772
+    },
+    {
+      "id": "e5bbb499",
+      "img": "img/e5bbb499.png",
+      "box": "box3_095014",
+      "group": "a",
+      "truth": "559689",
+      "ctc_seed_guesses": [
+        "556189",
+        "556189",
+        "556189"
+      ],
+      "ctc_seed_confs": [
+        0.1201,
+        0.1386,
+        0.0784
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "555889",
+      "four_models": {
+        "sonnet": "55?689",
+        "fable": "559589"
+      },
+      "mech_label": {
+        "mech": "overlap",
+        "note": "数字どうしの重なり",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "2",
+      "confidence": 0.0784
+    },
+    {
+      "id": "b9b676bc",
+      "img": "img/b9b676bc.png",
+      "box": "box2_0911",
+      "group": "a",
+      "truth": "269405",
+      "ctc_seed_guesses": [
+        "289405",
+        "289405",
+        "289405"
+      ],
+      "ctc_seed_confs": [
+        0.0223,
+        0.0449,
+        0.0798
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "269405",
+      "four_models": {
+        "sonnet": "269405",
+        "fable": "269405"
+      },
+      "mech_label": {
+        "mech": "unlabeled",
+        "note": null,
+        "source": "unlabeled_2026-09-16"
+      },
+      "layer": "2",
+      "confidence": 0.0223
+    },
+    {
+      "id": "34612f12",
+      "img": "img/34612f12.png",
+      "box": "box3_095014",
+      "group": "a",
+      "truth": "486879",
+      "ctc_seed_guesses": [
+        "486879",
+        "486819",
+        "486819"
+      ],
+      "ctc_seed_confs": [
+        0.7016,
+        0.7236,
+        0.7153
+      ],
+      "ctc_unanimous": false,
+      "opus_answer": "486869",
+      "four_models": {
+        "sonnet": "486879",
+        "fable": "486879"
+      },
+      "mech_label": {
+        "mech": "unlabeled",
+        "note": null,
+        "source": "unlabeled_2026-09-16"
+      },
+      "layer": "3",
+      "confidence": 0.7016
+    },
+    {
+      "id": "31968602",
+      "img": "img/31968602.png",
+      "box": "box1_091021",
+      "group": "b",
+      "truth": "465721",
+      "ctc_seed_guesses": [
+        "465711",
+        "465721",
+        "465711"
+      ],
+      "ctc_seed_confs": [
+        0.461,
+        0.1934,
+        0.2607
+      ],
+      "ctc_unanimous": false,
+      "opus_answer": "465741",
+      "four_models": {
+        "sonnet": "465711",
+        "fable": "465741"
+      },
+      "mech_label": {
+        "mech": "frame_clip",
+        "note": "枠に刺さって切れる",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "3",
+      "confidence": 0.1934
+    },
+    {
+      "id": "2a828f42",
+      "img": "img/2a828f42.png",
+      "box": "box3_095014",
+      "group": "a",
+      "truth": "094613",
+      "ctc_seed_guesses": [
+        "046713",
+        "004613",
+        "094613"
+      ],
+      "ctc_seed_confs": [
+        0.0002,
+        0.0005,
+        0.0161
+      ],
+      "ctc_unanimous": false,
+      "opus_answer": "704613",
+      "four_models": {
+        "sonnet": "0?4613",
+        "fable": "004613"
+      },
+      "mech_label": {
+        "mech": "overlap",
+        "note": "数字どうしの重なり",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "3",
+      "confidence": 0.0002
+    },
+    {
+      "id": "3776d7a2",
+      "img": "img/3776d7a2.png",
+      "box": "box2_093014",
+      "group": "c",
+      "truth": "575099",
+      "ctc_seed_guesses": [
+        "517509",
+        "575039",
+        "575059"
+      ],
+      "ctc_seed_confs": [
+        0.0004,
+        0.0007,
+        0.0001
+      ],
+      "ctc_unanimous": false,
+      "opus_answer": "575609",
+      "four_models": {
+        "sonnet": "575099",
+        "fable": "5750?9"
+      },
+      "mech_label": {
+        "mech": "overlap",
+        "note": "数字どうしの重なり",
+        "source": "docs/instructions/2026-09/2026-09-16_1000_pia-mech-eval-slices.md#素材"
+      },
+      "layer": "3",
+      "confidence": 0.0001
+    },
+    {
+      "id": "d5223d13",
+      "img": "img/d5223d13.png",
+      "box": "pia_box_20260913_1030",
+      "group": "c",
+      "truth": "791901",
+      "ctc_seed_guesses": [
+        "791901",
+        "791901",
+        "791901"
+      ],
+      "ctc_seed_confs": [
+        0.0078,
+        0.0009,
+        0.0026
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "791901",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.0009
+    },
+    {
+      "id": "eda10d50",
+      "img": "img/eda10d50.png",
+      "box": "box2_093014",
+      "group": "c",
+      "truth": "201440",
+      "ctc_seed_guesses": [
+        "201440",
+        "201440",
+        "201440"
+      ],
+      "ctc_seed_confs": [
+        0.5184,
+        0.1617,
+        0.0151
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "201440",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.0151
+    },
+    {
+      "id": "e929d2b5",
+      "img": "img/e929d2b5.png",
+      "box": "box2_0911",
+      "group": "a",
+      "truth": "864859",
+      "ctc_seed_guesses": [
+        "864859",
+        "864859",
+        "864859"
+      ],
+      "ctc_seed_confs": [
+        0.127,
+        0.3574,
+        0.7967
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "864859",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.127
+    },
+    {
+      "id": "ed788c5d",
+      "img": "img/ed788c5d.png",
+      "box": "box4_101017",
+      "group": "b",
+      "truth": "527081",
+      "ctc_seed_guesses": [
+        "527081",
+        "527081",
+        "527081"
+      ],
+      "ctc_seed_confs": [
+        0.1451,
+        0.4257,
+        0.7076
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "527081",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.1451
+    },
+    {
+      "id": "a3900fc9",
+      "img": "img/a3900fc9.png",
+      "box": "box2_0911",
+      "group": "a",
+      "truth": "812658",
+      "ctc_seed_guesses": [
+        "812658",
+        "812658",
+        "812658"
+      ],
+      "ctc_seed_confs": [
+        0.7927,
+        0.3755,
+        0.191
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "812658",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.191
+    },
+    {
+      "id": "9be409f7",
+      "img": "img/9be409f7.png",
+      "box": "box2_0911",
+      "group": "a",
+      "truth": "170860",
+      "ctc_seed_guesses": [
+        "170860",
+        "170860",
+        "170860"
+      ],
+      "ctc_seed_confs": [
+        0.5661,
+        0.2969,
+        0.2151
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "170860",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.2151
+    },
+    {
+      "id": "d1aae3c6",
+      "img": "img/d1aae3c6.png",
+      "box": "box2_0911",
+      "group": "a",
+      "truth": "614904",
+      "ctc_seed_guesses": [
+        "614904",
+        "614904",
+        "614904"
+      ],
+      "ctc_seed_confs": [
+        0.577,
+        0.235,
+        0.5533
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "614904",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.235
+    },
+    {
+      "id": "6f9b2823",
+      "img": "img/6f9b2823.png",
+      "box": "box2_093014",
+      "group": "c",
+      "truth": "881955",
+      "ctc_seed_guesses": [
+        "881955",
+        "881955",
+        "881955"
+      ],
+      "ctc_seed_confs": [
+        0.8852,
+        0.3946,
+        0.2465
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "881955",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.2465
+    },
+    {
+      "id": "f34ecce2",
+      "img": "img/f34ecce2.png",
+      "box": "box2_0911",
+      "group": "a",
+      "truth": "337361",
+      "ctc_seed_guesses": [
+        "337361",
+        "337361",
+        "337361"
+      ],
+      "ctc_seed_confs": [
+        0.3366,
+        0.35,
+        0.41
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "337361",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.3366
+    },
+    {
+      "id": "6fa6ee02",
+      "img": "img/6fa6ee02.png",
+      "box": "box2_093014",
+      "group": "c",
+      "truth": "192729",
+      "ctc_seed_guesses": [
+        "192729",
+        "192729",
+        "192729"
+      ],
+      "ctc_seed_confs": [
+        0.4322,
+        0.5597,
+        0.6621
+      ],
+      "ctc_unanimous": true,
+      "opus_answer": "192729",
+      "four_models": null,
+      "mech_label": null,
+      "layer": "4",
+      "confidence": 0.4322
+    }
+  ]
+}
