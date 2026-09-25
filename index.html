@@ -1052,7 +1052,7 @@
     var name = readName();
     if (name) lines.push("name: " + name);
     // 第3要素は source（`human`=人が確認/修正・`ai_unconfirmed`=AI予測のまま未確認で送信・
-    // 2026-09-15 pia-answer-source-ai-vs-human）。`box_ingest.ANSWER_LINE_RE`の任意第3群と同じ規約。
+    // 2026-09-15 pia-answer-source-ai-vs-human）。`box_answers.ANSWER_LINE_RE`の任意第3群と同じ規約。
     pairs.forEach(function(p){ lines.push(p[0] + " " + p[1] + " " + p[2]); });
     return lines.join("\n");
   }
