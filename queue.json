@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T20:22:12.100723+09:00",
+  "generated_at": "2026-10-15T20:24:14.973941+09:00",
   "model": "ctc_cnn_ledger_steps6000_seed2",
   "items": [
     {
@@ -3679,7 +3679,7 @@
       "box_id": "box3_20261004_093530",
       "box_time": "2026-10-04 09:35:30",
       "ai_pred": "465064",
-      "ai_conf": 0.6118,
+      "ai_conf": 0.6119,
       "img": "imgs/fc1e704f.jpg"
     },
     {
@@ -6955,6 +6955,14 @@
       "img": "imgs/ee44c520.jpg"
     },
     {
+      "sha8": "947bcfbe",
+      "box_id": "box3_20260922_093525",
+      "box_time": "2026-09-22 09:35:25",
+      "ai_pred": "024450",
+      "ai_conf": 0.8357,
+      "img": "imgs/947bcfbe.jpg"
+    },
+    {
       "sha8": "45634a17",
       "box_id": "box2_20260919_091643",
       "box_time": "2026-09-19 09:16:43",
@@ -6969,14 +6977,6 @@
       "ai_pred": "372530",
       "ai_conf": 0.8358,
       "img": "imgs/3538d994.jpg"
-    },
-    {
-      "sha8": "947bcfbe",
-      "box_id": "box3_20260922_093525",
-      "box_time": "2026-09-22 09:35:25",
-      "ai_pred": "024450",
-      "ai_conf": 0.8358,
-      "img": "imgs/947bcfbe.jpg"
     },
     {
       "sha8": "b22c5c40",
