@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T06:22:41.788197+09:00",
+  "generated_at": "2026-11-06T09:22:58.443647+09:00",
   "model": "ctc_cnn_ledger_steps6000_seed2",
   "items": [
     {
@@ -5329,6 +5329,14 @@
       "ai_pred": "086391",
       "ai_conf": 0.6322,
       "img": "imgs/0a09f5f8.jpg"
+    },
+    {
+      "sha8": "355bcf99",
+      "box_id": "box2_20261106_091807",
+      "box_time": "2026-11-06 09:18:07",
+      "ai_pred": "583884",
+      "ai_conf": 0.6323,
+      "img": "imgs/355bcf99.jpg"
     },
     {
       "sha8": "c081a2b8",
@@ -36947,6 +36955,14 @@
       "img": "imgs/43571bfa.jpg"
     },
     {
+      "sha8": "26fdf29e",
+      "box_id": "box2_20261106_091807",
+      "box_time": "2026-11-06 09:18:07",
+      "ai_pred": "531976",
+      "ai_conf": 0.9971,
+      "img": "imgs/26fdf29e.jpg"
+    },
+    {
       "sha8": "514e62bf",
       "box_id": "box6_20261104_103812",
       "box_time": "2026-11-04 10:38:12",
@@ -51425,6 +51441,14 @@
       "ai_pred": "402949",
       "ai_conf": 0.999,
       "img": "imgs/8f51536c.jpg"
+    },
+    {
+      "sha8": "6a8fa3df",
+      "box_id": "box2_20261106_091807",
+      "box_time": "2026-11-06 09:18:07",
+      "ai_pred": "201918",
+      "ai_conf": 0.9991,
+      "img": "imgs/6a8fa3df.jpg"
     },
     {
       "sha8": "b4a646ad",
